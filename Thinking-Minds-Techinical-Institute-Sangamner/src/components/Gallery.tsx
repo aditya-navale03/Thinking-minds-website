@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import galleryLab from "@/assets/gallery-lab-1.jpg";
-import galleryClassroom from "@/assets/gallery-classroom-1.jpg";
-import galleryWorkshop from "@/assets/gallery-workshop-1.jpg";
-import galleryReception from "@/assets/gallery-reception-1.jpg";
+import galleryLab from "../assets/gallery-lab-1.jpg";
+import galleryClassroom from "../assets/gallery-classroom-1.jpg";
+import galleryWorkshop from "../assets/gallery-workshop-1.jpg";
+import galleryReception from "../assets/gallery-reception-1.jpg";
 
 const galleryImages = [
   { src: galleryLab, alt: "Students working in computer lab", caption: "Modern Computer Labs" },

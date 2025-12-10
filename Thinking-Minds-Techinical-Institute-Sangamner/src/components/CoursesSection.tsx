@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { Code, HardHat } from "lucide-react";
 import CourseCard from "./CourseCard";
 import CourseModal from "./courseModal";   // <-- make sure this exists
-import { Course, courses } from "@/data/courses";
+import { Course, courses } from "../data/courses";
 
 const CoursesSection = () => {
   const [activeTab, setActiveTab] = useState("it");

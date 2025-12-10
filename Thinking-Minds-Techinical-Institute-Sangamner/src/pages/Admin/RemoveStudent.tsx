@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import PopupModal from "@/components/ui/removeStudent";
+import { Button } from "../../components/ui/button";
+import PopupModal from "../../components/ui/removeStudent";
 
-import { db } from "@/firebase/firebaseConfig";
+import { db } from "../../firebase/firebaseConfig";
 import {
   collection,
   query,

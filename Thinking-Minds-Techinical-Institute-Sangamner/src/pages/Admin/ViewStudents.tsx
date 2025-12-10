@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { db } from "@/firebase/firebaseConfig";
+import { Button } from "../../components/ui/button";
+import { db } from "../../firebase/firebaseConfig";
 import {
   collection,
   getDocs,
@@ -9,7 +9,7 @@ import {
   doc,
 } from "firebase/firestore";
 
-import SuccessScreen from "@/components/ui/SuccessScreen";
+import SuccessScreen from "../../components/ui/SuccessScreen";
 
 interface Student {
   id: string;

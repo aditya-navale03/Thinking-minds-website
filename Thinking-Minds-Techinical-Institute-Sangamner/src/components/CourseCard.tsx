@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Clock, DollarSign, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Course } from "@/data/courses";
+import { Button } from "../components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import { Course } from "../data/courses";
 
 interface CourseCardProps {
   course: Course;

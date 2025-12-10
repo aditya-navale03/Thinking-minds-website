@@ -3,7 +3,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../../firebase/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-import BackButton from "@/components/ui/backbutton";
+import BackButton from "../../components/ui/backbutton";
 
 function AdminLogin() {
   const navigate = useNavigate();

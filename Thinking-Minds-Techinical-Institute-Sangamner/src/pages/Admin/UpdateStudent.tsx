@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { doc, getDoc, updateDoc, Timestamp } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig"; // ✅ FIXED PATH
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 
 interface Student {
   id: number;

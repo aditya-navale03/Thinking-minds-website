@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { signOut } from "firebase/auth";
-import { auth } from "@/firebase/firebaseConfig";
+import { auth } from "../../firebase/firebaseConfig";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 import { UserPlus, UserMinus, LogOut, Users } from "lucide-react";
 
 export default function CivilAdminDashboard() {

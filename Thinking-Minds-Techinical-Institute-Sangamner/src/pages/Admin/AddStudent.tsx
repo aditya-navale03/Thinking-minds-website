@@ -4,9 +4,9 @@
 import imageCompression from "browser-image-compression";
 import { useState, FormEvent } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import SuccessScreen from "@/components/ui/SuccessScreen";
-import { courses } from "@/data/courses";
+import { Button } from "../../components/ui/button";
+import SuccessScreen from "../../components/ui/SuccessScreen";
+import { courses } from "../../data/courses";
 
 
 // Firebase

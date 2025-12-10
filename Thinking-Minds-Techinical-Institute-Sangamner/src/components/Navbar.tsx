@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X, GraduationCap } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
 type CourseTab = "it" | "civil";

@@ -1,11 +1,11 @@
-import Navbar from "@/components/Navbar";
-import HeroSlider from "@/components/HeroSlider";
-import CoursesSection from "@/components/CoursesSection";
-import Gallery from "@/components/Gallery";
-import Testimonials from "@/components/Testimonials";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
+import Navbar from "../components/Navbar";
+import HeroSlider from "../components/HeroSlider";
+import CoursesSection from "../components/CoursesSection";
+import Gallery from "../components/Gallery";
+import Testimonials from "../components/Testimonials";
+import Contact from "../components/Contact";
+import Footer from "../components/Footer";
+import { Button } from "../components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {

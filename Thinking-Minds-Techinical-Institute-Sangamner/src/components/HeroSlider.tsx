@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
-import sliderIt from "@/assets/slider-it-courses.jpg";
-import sliderCivil from "@/assets/slider-civil-software.jpg";
-import sliderLabs from "@/assets/slider-practical-labs.jpg";
-import sliderCertifications from "@/assets/slider-certifications.jpg";
-import sliderWorkshops from "@/assets/slider-workshops.jpg";
+import sliderIt from "../assets/slider-it-courses.jpg";
+import sliderCivil from "../assets/slider-civil-software.jpg";
+import sliderLabs from "../assets/slider-practical-labs.jpg";
+import sliderCertifications from "../assets/slider-certifications.jpg";
+import sliderWorkshops from "../assets/slider-workshops.jpg";
 
 import StudentScrollView from "./StudentScrollView"; // import the scroll view
 
