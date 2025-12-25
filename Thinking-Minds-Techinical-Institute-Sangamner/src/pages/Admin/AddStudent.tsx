@@ -7,6 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import SuccessScreen from "../../components/ui/SuccessScreen";
 import { courses } from "../../data/courses";
+import BackButton from "../../components/ui/backbutton";
 
 // const CLOUDINARY_CLOUD_NAME = "deqklavmi"; 
 // const CLOUDINARY_UPLOAD_PRESET = "students"; // UNSIGNED preset name
@@ -248,6 +249,12 @@ if (!email.trim()) {
   // ---------------- UI ----------------
   return (
     <div className="min-h-screen bg-gray-100 px-3 py-6 md:px-6">
+      
+      <div className="max-w-6xl mx-auto mb-3">
+  <BackButton />
+</div>
+
+      
       <h1 className="text-2xl md:text-3xl font-bold text-center mb-6">
         Add Student ({department.toUpperCase()})
       </h1>
