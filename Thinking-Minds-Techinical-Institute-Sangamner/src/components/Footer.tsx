@@ -66,38 +66,61 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Info */}
-          <div>
-            <h3 className="font-display text-lg font-bold mb-4">Contact Info</h3>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
-                <span className="text-primary-foreground/80">
-                  123 Learning Street, Tech Park, Bangalore, Karnataka 560001
-                </span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 flex-shrink-0" />
-                <span className="text-primary-foreground/80">+91 98765 43210</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 flex-shrink-0" />
-                <span className="text-primary-foreground/80">info@thinkingminds.in</span>
-              </li>
-            </ul>
+{/* Contact Info */}
+<div>
+  <h3 className="font-display text-lg font-bold mb-4">Contact Info</h3>
+
+  <ul className="space-y-3 text-sm">
+    {/* Location */}
+    <li className="flex items-start gap-2">
+      <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
+      <span className="text-primary-foreground/80">
+        Opposite Amrutvahini College, Sangamner,
+        Ghulewadi, Maharashtra 422608
+      </span>
+    </li>
+
+    {/* Phone */}
+    <li className="flex items-start gap-2">
+      <Phone className="h-4 w-4 mt-1 flex-shrink-0" />
+
+      <div className="flex flex-col space-y-1 text-primary-foreground/80">
+        <a href="tel:+918412978749" className="hover:underline">
+          +91 84129 78749
+        </a>
+        <a href="tel:+919552495373" className="hover:underline">
+          +91 95524 95373
+        </a>
+      </div>
+    </li>
+
+    {/* Email */}
+    <li className="flex items-start gap-2">
+      <Mail className="h-4 w-4 mt-1 flex-shrink-0" />
+      <a
+        href="mailto:info@thinkingminds.in"
+        className="text-primary-foreground/80 hover:underline"
+      >
+        tminds2212@gmail.com
+      </a>
+    </li>
+  </ul>
+
 
             {/* Social Media */}
             <div className="mt-4">
               <h4 className="font-semibold mb-3">Follow Us</h4>
               <div className="flex gap-3">
-                <a
+                
+                {/* <a
                   href="https://facebook.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-primary-foreground/10 hover:bg-accent p-2 rounded-full transition-colors"
                 >
                   <Facebook className="h-4 w-4" />
-                </a>
+                </a> }  removed due to no page yet */}
+                
                 <a
                   href="https://instagram.com"
                   target="_blank"
@@ -106,30 +129,33 @@ const Footer = () => {
                 >
                   <Instagram className="h-4 w-4" />
                 </a>
-                <a
+
+                {/* <a
                   href="https://linkedin.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-primary-foreground/10 hover:bg-accent p-2 rounded-full transition-colors"
                 >
                   <Linkedin className="h-4 w-4" />
-                </a>
-                <a
+                </a> } removed due to no page yet */}
+
+                {/* <a
                   href="https://twitter.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-primary-foreground/10 hover:bg-accent p-2 rounded-full transition-colors"
                 >
                   <Twitter className="h-4 w-4" />
-                </a>
-                <a
+                </a> removed due to no page yet */}
+
+                {/* <a
                   href="https://youtube.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-primary-foreground/10 hover:bg-accent p-2 rounded-full transition-colors"
                 >
                   <Youtube className="h-4 w-4" />
-                </a>
+                </a>  removed due to no page yet */}
               </div>
             </div>
           </div>

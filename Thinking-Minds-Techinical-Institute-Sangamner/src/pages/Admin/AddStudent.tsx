@@ -8,11 +8,15 @@ import { Button } from "../../components/ui/button";
 import SuccessScreen from "../../components/ui/SuccessScreen";
 import { courses } from "../../data/courses";
 
+// const CLOUDINARY_CLOUD_NAME = "deqklavmi"; 
+// const CLOUDINARY_UPLOAD_PRESET = "students"; // UNSIGNED preset name
+
+
 
 // Firebase
 import { db, storage } from "../../firebase/firebaseConfig";
 import { collection, addDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+//import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 interface FormErrors {
   firstName?: string;
@@ -139,12 +143,6 @@ const [filteredCourses, setFilteredCourses] = useState<string[]>(courseOptions);
     }
   }
 
- const uploadPhotoToFirebase = async () => {
-  // TEMPORARY: skip upload completely
-  console.log("Skipping image upload (Blaze plan not enabled).");
-  return ""; // return empty URL
-};
-
 
   // ---------------- VALIDATE ----------------
   const validate = () => {
@@ -215,8 +213,6 @@ if (!email.trim()) {
   const finalRollNo =
     rollNo || generateRollNoValue(firstName, aadhar, lastName, department);
 
-  // ---------------- PHOTO (TEMP DISABLED) ----------------
-  const photoURL = await uploadPhotoToFirebase();
 
   // ---------------- SAVE TO FIRESTORE ----------------
   await addDoc(collection(db, "students"), {
@@ -233,7 +229,7 @@ if (!email.trim()) {
     firstInstallment: firstInstall,
     remainingFee: feeValue - firstInstall < 0 ? 0 : feeValue - firstInstall,
     feePaid: firstInstall,
-    photoURL: ""
+    photoURL: "", //photoURL,
   });
 
   console.log("Student saved successfully!");
@@ -319,8 +315,6 @@ if (!email.trim()) {
           />
         </div>
 
-        {/* Remaining UI stays EXACTLY same (unchanged) */}
-        {/* I kept EVERYTHING else exactly same as your file */}
 
         {/* ---------------- REST OF YOUR CODE CONTINUES BELOW WITHOUT CHANGE ---------------- */}
         {/* DOB */}
@@ -408,12 +402,13 @@ const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|in|org|net|edu|gov)$/;
       }));
     }}
     onKeyDown={(e) => {
-      if (e.key === "Enter" && filteredCourses.length === 1) {
-        setCourse(filteredCourses[0]);
-        setFilteredCourses([]);
-        setShowDropdown(false);
-      }
-    }}
+  if (e.key === "Enter" && filteredCourses.length === 1) {
+    setCourse(filteredCourses[0]);
+    setFilteredCourses([]);
+    setShowDropdown(false);
+  }
+}}
+
     placeholder="Type or select a course"
     className="w-full border px-3 py-2 rounded"
   />
@@ -437,17 +432,6 @@ const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|in|org|net|edu|gov)$/;
     </div>
   )}
 </div>
-
-
-        {/* DEPARTMENT */}
-        <div>
-          <label>Department</label>
-          <input
-            value={department}
-            disabled
-            className="w-full border px-3 py-2 rounded bg-gray-200"
-          />
-        </div>
 
         {/* TOTAL FEE */}
         <div>
@@ -498,15 +482,6 @@ const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|in|org|net|edu|gov)$/;
           />
         </div>
 
-        {/* ROLL NUMBER */}
-        <div>
-          <label>Roll Number</label>
-          <input
-            value={rollNo}
-            readOnly
-            className="w-full border px-3 py-2 rounded bg-gray-100"
-          />
-        </div>
 
         {/* MOBILE */}
         <div>
@@ -559,7 +534,32 @@ const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|in|org|net|edu|gov)$/;
             className="w-full border px-3 py-2 rounded"
           />
 
-          <div className="mt-2">
+          
+        </div>
+
+  {/* DEPARTMENT */}
+<div>
+  <label>Department</label>
+  <input
+    value={department}
+    disabled
+    className="w-full border px-3 py-2 rounded bg-gray-200"
+  />
+</div>
+
+{/* ROLL NUMBER */}
+<div>
+  <label>Roll Number</label>
+  <input
+    value={rollNo}
+    readOnly
+    className="w-full border px-3 py-2 rounded bg-gray-100"
+  />
+</div>
+
+
+  {/* Remaining Fee */}
+  <div className="mt-2">
             <label>Remaining Fee</label>
             <input
               value={remainingFee}
@@ -567,48 +567,56 @@ const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|in|org|net|edu|gov)$/;
               className="w-full border px-3 py-2 rounded bg-gray-100"
             />
           </div>
-        </div>
 
-        {/* PHOTO */}
-        <div className="col-span-1 sm:col-span-2 lg:col-span-3">
-          <label>Student Photo</label>
 
-          <div
-            onClick={() => document.getElementById("photoInput")?.click()}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setIsDragging(true);
-            }}
-            onDragLeave={() => setIsDragging(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setIsDragging(false);
-              const file = e.dataTransfer.files?.[0];
-              if (file) handlePhoto(file);
-            }}
-            className={`
-              border-2 border-dashed p-4 rounded text-center cursor-pointer 
-              ${isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"}
-            `}
-          >
-            {!photoPreview ? (
-              <p className="text-gray-600">Drag & Drop or Click</p>
-            ) : (
-              <img
-                src={photoPreview}
-                className="w-28 h-28 object-cover rounded mx-auto"
-              />
-            )}
-          </div>
+{/* new code  */}
+{/* AUTO-GENERATED / FIXED FIELDS (Always at bottom) */}
+<div className="col-span-1 sm:col-span-2 lg:col-span-3 
+                grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-          <input
-            id="photoInput"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => handlePhoto(e.target.files?.[0] || null)}
-          />
-        </div>
+
+  {/* Student Photo */}
+  <div>
+    <label>Student Photo</label>
+
+    <div
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsDragging(true);
+      }}
+      onDragLeave={() => setIsDragging(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const file = e.dataTransfer.files?.[0];
+        if (file) handlePhoto(file);
+      }}
+      className={`
+        border-2 border-dashed p-4 rounded text-center cursor-pointer 
+        ${isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"}
+      `}
+    >
+      {!photoPreview ? (
+        <p className="text-gray-600">Drag & Drop Only</p>
+      ) : (
+        <img
+          src={photoPreview}
+          className="w-28 h-28 object-cover rounded mx-auto"
+        />
+      )}
+    </div>
+
+    <input
+      id="photoInput"
+      type="file"
+      accept="image/*"
+      className="hidden"
+      onChange={(e) => handlePhoto(e.target.files?.[0] || null)}
+    />
+  </div>
+
+</div>
+
 
         {/* BUTTONS */}
         <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center gap-4 mt-3">

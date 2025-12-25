@@ -13,7 +13,7 @@ const CourseModal = ({ course, onClose }: CourseModalProps) => {
 
   const handleEnroll = () => {
     const message = `Hello! I would like to enroll in the ${course.name} course. My name is `;
-    const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(
+    const whatsappUrl = `https://wa.me/8459769802?text=${encodeURIComponent(
       message
     )}`;
     window.open(whatsappUrl, "_blank");

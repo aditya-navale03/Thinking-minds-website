@@ -33,7 +33,7 @@ Phone: ${formData.phone}
 Interested Course: ${formData.course}
 Message: ${formData.message}`;
 
-    const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/8459769802?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
     
     toast.success("Redirecting to WhatsApp...");
@@ -93,10 +93,10 @@ Message: ${formData.message}`;
                   <div>
                     <p className="font-semibold">Address</p>
                     <p className="text-sm text-muted-foreground">
-                      123 Learning Street, Tech Park,
+                      opposite Amrutvahini College, Sangamner, 
                       <br />
-                      Bangalore, Karnataka 560001
-                    </p>
+                      Ghulewadi, Maharashtra 422608, Sangamner, Maharashtra 422605, Sangamner, Maharashtra 422608                    
+                      </p>
                   </div>
                 </div>
 
@@ -104,32 +104,46 @@ Message: ${formData.message}`;
                   <Phone className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
                   <div>
                     <p className="font-semibold">Phone</p>
-                    <p className="text-sm text-muted-foreground">+91 98765 43210</p>
-                    <p className="text-sm text-muted-foreground">+91 98765 43211</p>
+                    <p className="text-sm text-muted-foreground">+91 8412978749</p>
+                    <p className="text-sm text-muted-foreground">+91 9552495373</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <MessageCircle className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold">WhatsApp</p>
-                    <a
-                      href="https://wa.me/919876543210"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-primary hover:underline"
-                    >
-                      +91 98765 43210
-                    </a>
-                  </div>
-                </div>
+  <MessageCircle className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+
+  <div>
+    <p className="font-semibold">WhatsApp</p>
+
+    <div className="flex flex-col">
+      <a
+        href="https://wa.me/8412978749"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-sm text-primary hover:underline"
+      >
+        +91 84129 78749
+      </a>
+
+      <a
+        href="https://wa.me/9552495373"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-sm text-primary hover:underline"
+      >
+        +91 95524 95373
+      </a>
+    </div>
+  </div>
+</div>
+
 
                 <div className="flex items-start gap-3">
                   <Mail className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
                   <div>
                     <p className="font-semibold">Email</p>
-                    <p className="text-sm text-muted-foreground">info@thinkingminds.in</p>
-                    <p className="text-sm text-muted-foreground">admissions@thinkingminds.in</p>
+                    <p className="text-sm text-muted-foreground">tminds2212@gmail.com</p>
+                    <p className="text-sm text-muted-foreground">www.thinkingminds.tech</p>
                   </div>
                 </div>
               </CardContent>
@@ -140,7 +154,7 @@ Message: ${formData.message}`;
               <CardContent className="p-0">
                 <div className="aspect-video w-full rounded-lg overflow-hidden">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.2!2d77.59!3d12.97!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDU4JzEzLjIiTiA3N8KwMzUnMjQuMCJF!5e0!3m2!1sen!2sin!4v1234567890"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d240537.481385967!2d73.87966609453126!3d19.610268999999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bdd0191f673b5e5%3A0xe019cc39d0c25d0f!2s%E2%80%9CThinking%20Minds%20Technical%20Training%20Institute%20%E2%80%93%20The%20Leading%20Training%20Institute%20in%20Sangamner%20and%20Akole.%E2%80%9D!5e0!3m2!1sen!2sin!4v1765883874467!5m2!1sen!2sin"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}

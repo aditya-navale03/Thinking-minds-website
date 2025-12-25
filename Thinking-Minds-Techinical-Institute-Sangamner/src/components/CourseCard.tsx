@@ -13,7 +13,7 @@ interface CourseCardProps {
 const CourseCard = ({ course, index, onOpenModal }: CourseCardProps) => {
   const handleEnroll = () => {
     const msg = `Hello! I would like to enroll in the ${course.name} course.`;
-    const wa = `https://wa.me/919876543210?text=${encodeURIComponent(msg)}`;
+    const wa = `https://wa.me/8459769802?text=${encodeURIComponent(msg)}`;
     window.open(wa, "_blank");
   };
 

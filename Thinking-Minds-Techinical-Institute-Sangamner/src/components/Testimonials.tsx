@@ -4,28 +4,28 @@ import { Star, Quote } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Rahul Sharma",
+    name: "Aditya navale",
     course: "Java Full Stack",
     image: "👨‍💻",
     rating: 5,
-    text: "The Java Full Stack course was comprehensive and practical. The instructors were excellent, and the hands-on projects helped me secure a job as a software developer within 2 months of completion!",
-    placement: "Software Developer at TCS"
+    text: "Sharing this review to highlight the excellent teaching and supportive faculty of Thinking Minds Technical Institute.A great place to learn coding with a focus on both theory and practical knowledge.",
+    // placement: "Software Developer at TCS"
   },
   {
-    name: "Priya Patel",
+    name: "Suraj Jadhav",
     course: "AutoCAD 2D/3D",
     image: "👩‍💼",
     rating: 5,
-    text: "I learned AutoCAD from scratch and now I'm working as a CAD technician. The practical training and live projects made all the difference. Highly recommended for civil engineering students!",
-    placement: "CAD Technician at L&T"
+    text: "Fantastic training center for civil engineers. Learned a lot and felt very supported. A must-join if you want to master design software. And other Coding language and more in Engineering Field.",
+    // placement: "CAD Technician at L&T"
   },
   {
-    name: "Amit Kumar",
+    name: "Pratik Bhor",
     course: "Python Programming",
     image: "👨‍🎓",
     rating: 5,
-    text: "Best decision to join the Python course here. The curriculum is up-to-date with industry standards, and the placement support is excellent. Now working as a Python developer!",
-    placement: "Python Developer at Infosys"
+    text: "I am a student of this institute and my experience has been very good. The teachers are supportive, practical sessions are useful, and the learning environment is positive. Overall, a great place for technical training.",
+    // placement: "Python Developer at Infosys"
   },
   {
     name: "Sneha Reddy",
