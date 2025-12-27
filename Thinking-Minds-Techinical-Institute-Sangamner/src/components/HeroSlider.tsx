@@ -6,7 +6,7 @@ import sliderLabs from "../assets/slider-practical-labs.jpg";
 import sliderCertifications from "../assets/slider-certifications.jpg";
 import sliderWorkshops from "../assets/slider-workshops.jpg";
 
-import StudentScrollView from "./StudentScrollView"; // import the scroll view
+// import StudentScrollView from "./StudentScrollView"; // import the scroll view
 
 const slides = [
   { image: sliderIt, title: "IT Courses", subtitle: "Master Programming & Web Development" },
@@ -81,7 +81,7 @@ const HeroSlider = () => {
       </AnimatePresence>
 
       {/* Add the Student Scroll View at the bottom of hero section */}
-      <StudentScrollView />
+      {/* <StudentScrollView />    removed as per instructions for photo section will be used in future */}
     </div>
   );
 };

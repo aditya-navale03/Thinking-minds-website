@@ -9,6 +9,9 @@ import SuccessScreen from "../../components/ui/SuccessScreen";
 import { courses } from "../../data/courses";
 import BackButton from "../../components/ui/backbutton";
 
+
+import { doc, setDoc, arrayUnion } from "firebase/firestore";
+
 // const CLOUDINARY_CLOUD_NAME = "deqklavmi"; 
 // const CLOUDINARY_UPLOAD_PRESET = "students"; // UNSIGNED preset name
 
@@ -215,23 +218,47 @@ if (!email.trim()) {
     rollNo || generateRollNoValue(firstName, aadhar, lastName, department);
 
 
-  // ---------------- SAVE TO FIRESTORE ----------------
-  await addDoc(collection(db, "students"), {
-    id: Date.now(),
-    rollNo: finalRollNo,
-    fullName: fullName,
-    dob,
-    email: email.toLowerCase(),
-    course: course.toUpperCase(),
-    department,
-    aadhar: aadhar.replace(/\D/g, ""),
-    mobile,
-    totalFee: feeValue,
-    firstInstallment: firstInstall,
-    remainingFee: feeValue - firstInstall < 0 ? 0 : feeValue - firstInstall,
-    feePaid: firstInstall,
-    photoURL: "", //photoURL,
-  });
+    //the sample code for uploading to firebase section wise
+
+await setDoc(
+  doc(db, "students", department.toLowerCase()),
+  {
+    students: arrayUnion({
+      rollNo: finalRollNo,
+      fullName,
+      dob,
+      email: email.toLowerCase(),
+      course: course.toUpperCase(),
+      aadhar: aadhar.replace(/\D/g, ""),
+      mobile,
+      totalFee: feeValue,
+      firstInstallment: firstInstall,
+      remainingFee: Math.max(0, feeValue - firstInstall),
+      feePaid: firstInstall,
+      photoURL: ""
+    })
+  },
+  { merge: true }
+);
+
+
+  // // ---------------- SAVE TO FIRESTORE ----------------
+  // await addDoc(collection(db, "students"), {
+  //   id: Date.now(),
+  //   rollNo: finalRollNo,
+  //   fullName: fullName,
+  //   dob,
+  //   email: email.toLowerCase(),
+  //   course: course.toUpperCase(),
+  //   department,
+  //   aadhar: aadhar.replace(/\D/g, ""),
+  //   mobile,
+  //   totalFee: feeValue,
+  //   firstInstallment: firstInstall,
+  //   remainingFee: feeValue - firstInstall < 0 ? 0 : feeValue - firstInstall,
+  //   feePaid: firstInstall,
+  //   photoURL: "", //photoURL,
+  // });
 
   console.log("Student saved successfully!");
 

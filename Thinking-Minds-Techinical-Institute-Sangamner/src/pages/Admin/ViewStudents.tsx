@@ -3,11 +3,15 @@ import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { db } from "../../firebase/firebaseConfig";
 import {
-  collection,
-  getDocs,
+  // collection,
+  // getDocs,
   deleteDoc,
   doc,
+  
 } from "firebase/firestore";
+
+import { useParams } from "react-router-dom";
+
 
 import SuccessScreen from "../../components/ui/SuccessScreen";
 
@@ -20,6 +24,10 @@ interface Student {
   feePaid: number;
 }
 
+import { useLocation } from "react-router-dom";
+import { getDoc } from "firebase/firestore";
+
+
 export default function RemoveStudent() {
   const [search, setSearch] = useState("");
   const [student, setStudent] = useState<Student | null>(null);
@@ -28,57 +36,72 @@ export default function RemoveStudent() {
   const [notFound, setNotFound] = useState(false);
   const [showDeletedPopup, setShowDeletedPopup] = useState(false);
 
+
+
+const { dept } = useParams();
+const department = dept || "";
+
+
   // ---------------------------
   // VERIFY STUDENT (improved partial + case-insensitive search)
   // ---------------------------
-  const verifyStudent = async () => {
-    setStudent(null);
-    setNotFound(false);
-    setShowDeletedPopup(false);
+const verifyStudent = async () => {
+  setStudent(null);
+  setNotFound(false);
+  setShowDeletedPopup(false);
 
-    const raw = search.trim();
-    if (!raw) return;
+  const raw = search.trim();
+  if (!raw) return;
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      // fetch all students and filter client-side
-      const snap = await getDocs(collection(db, "students"));
+  try {
+    const dept = department?.toLowerCase();
 
-      const term = raw.toUpperCase();
-
-      const all = snap.docs.map((d) => ({ id: d.id, ...(d.data() as Student) }));
-
-      const matches = all.filter((s) => {
-        const name = (s.fullName || "").toUpperCase();
-        const email = (s.email || "").toUpperCase();
-        const course = (s.course || "").toUpperCase();
-
-        // direct includes (anywhere in the string)
-        if (name.includes(term) || email.includes(term) || course.includes(term))
-          return true;
-
-        // also match by individual name parts (first name, last name, initials)
-        const parts = name.split(/\s+/).filter(Boolean);
-        if (parts.some((p) => p.startsWith(term))) return true;
-
-        return false;
-      });
-
-      if (matches.length === 0) {
-        setNotFound(true);
-        setLoading(false);
-        return;
-      }
-
-      // show first match (you can change to show list if you prefer)
-      setStudent(matches[0]);
-    } catch (err) {
-      console.error("Search error:", err);
-    } finally {
+    if (!dept) {
+      console.error("Department missing. Pass {state: { dept: 'it' }} when navigating.");
       setLoading(false);
+      return;
     }
-  };
+
+    const docSnap = await getDoc(doc(db, "students", dept));
+
+    const students = docSnap.exists() ? docSnap.data().students || [] : [];
+
+    const term = raw.toUpperCase();
+
+    const matches = students.filter((s: any) => {
+  const name = (s.fullName || "").toUpperCase();
+
+  // direct match anywhere in name
+  if (name.includes(term)) return true;
+
+  // match first/last parts starting with search term
+  const parts = name.split(/\s+/).filter(Boolean);
+  if (parts.some((p) => p.startsWith(term))) return true;
+
+  return false;
+});
+
+
+    if (matches.length === 0) {
+      setNotFound(true);
+      setLoading(false);
+      return;
+    }
+
+    setStudent(matches[0]);
+  } catch (err) {
+    console.error("Search error:", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
+//   const location = useLocation();
+// const department = location.state?.dept || "";
 
   // ---------------------------
   // DELETE STUDENT
