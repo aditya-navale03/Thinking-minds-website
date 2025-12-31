@@ -81,7 +81,7 @@ const HeroSlider = () => {
       </AnimatePresence>
 
       {/* Add the Student Scroll View at the bottom of hero section */}
-      {/* <StudentScrollView />    removed as per instructions for photo section will be used in future */}
+      {/* <StudentScrollView /> removed as per instructions for photo section will be used in future */}
     </div>
   );
 };

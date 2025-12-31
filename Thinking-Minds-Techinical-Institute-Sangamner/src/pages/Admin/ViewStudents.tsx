@@ -5,7 +5,7 @@ import { db } from "../../firebase/firebaseConfig";
 import {
   // collection,
   // getDocs,
-  deleteDoc,
+  // deleteDoc,
   doc,
   
 } from "firebase/firestore";
@@ -19,12 +19,20 @@ interface Student {
   id: string;
   fullName: string;
   email: string;
+  mobile: string;
+  aadhar: string;
   course: string;
+  dob: string;
+  rollNo: string;
+  photoURL: string;
   totalFee: number;
   feePaid: number;
+  firstInstallment: number;
+  remainingFee: number;
 }
 
-import { useLocation } from "react-router-dom";
+
+// import { useLocation } from "react-router-dom";
 import { getDoc } from "firebase/firestore";
 
 
@@ -34,7 +42,7 @@ export default function RemoveStudent() {
 
   const [loading, setLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
-  const [showDeletedPopup, setShowDeletedPopup] = useState(false);
+const [showDeletedPopup, setShowDeletedPopup] = useState(false);
 
 
 
@@ -91,6 +99,8 @@ const verifyStudent = async () => {
     }
 
     setStudent(matches[0]);
+    console.log("STUDENT DATA:", matches[0]);
+
   } catch (err) {
     console.error("Search error:", err);
   } finally {
@@ -103,21 +113,7 @@ const verifyStudent = async () => {
 //   const location = useLocation();
 // const department = location.state?.dept || "";
 
-  // ---------------------------
-  // DELETE STUDENT
-  // ---------------------------
-  const removeStudent = async () => {
-    if (!student) return;
-
-    try {
-      await deleteDoc(doc(db, "students", student.id));
-      setShowDeletedPopup(true);
-      setStudent(null);
-      setSearch("");
-    } catch (err) {
-      console.error("Delete failed:", err);
-    }
-  };
+  
 
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-10">
@@ -156,52 +152,65 @@ const verifyStudent = async () => {
           onClose={() => setNotFound(false)}
         />
       )}
+{student && (
+  <div className="max-w-2xl mx-auto bg-white shadow-xl p-6 rounded-2xl border">
 
-      {/* Student Card (Desktop Friendly) */}
-      {student && (
-        <div className="max-w-2xl mx-auto bg-white shadow-xl p-6 rounded-2xl border">
-          <h2 className="text-2xl font-semibold">{student.fullName}</h2>
-          <p className="text-gray-600">{student.email}</p>
+    <h2 className="text-2xl font-semibold">{student.fullName}</h2>
+    <p className="text-gray-600">{student.email}</p>
 
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            <div className="p-4 bg-gray-100 rounded-xl">
-              <strong>Course:</strong> {student.course}
-            </div>
+    <div className="grid grid-cols-2 gap-4 mt-4">
 
-            <div className="p-4 bg-gray-100 rounded-xl">
-              <strong>Total Fee:</strong> {student.totalFee}
-            </div>
+      <div className="p-4 bg-gray-100 rounded-xl">
+        <strong>Roll No:</strong> {student.rollNo}
+      </div>
 
-            <div className="p-4 bg-gray-100 rounded-xl">
-              <strong>Paid:</strong> {student.feePaid}
-            </div>
+      <div className="p-4 bg-gray-100 rounded-xl">
+        <strong>Mobile:</strong> {student.mobile}
+      </div>
 
-            <div className="p-4 bg-red-100 rounded-xl text-red-700 font-bold">
-              <strong>Due:</strong> {student.totalFee - student.feePaid}
-            </div>
-          </div>
+      <div className="p-4 bg-gray-100 rounded-xl">
+        <strong>Aadhar:</strong> {student.aadhar}
+      </div>
 
-          <div className="flex gap-4 mt-6 justify-center">
-            <Link to={`/admin/update-student/${student.id}`}>
-              <Button className="bg-blue-600 text-white px-8">Update</Button>
-            </Link>
+      <div className="p-4 bg-gray-100 rounded-xl">
+        <strong>DOB:</strong> {student.dob}
+      </div>
 
-            <Button className="bg-red-600 text-white px-8" onClick={removeStudent}>
-              Delete
-            </Button>
-          </div>
-        </div>
-      )}
+      <div className="p-4 bg-gray-100 rounded-xl">
+        <strong>Course:</strong> {student.course}
+      </div>
 
-      {/* Delete Success Popup */}
-      {showDeletedPopup && (
-        <SuccessScreen
-          title="Student Removed"
-          message="The student was successfully deleted."
-          buttonText="Close"
-          onClose={() => setShowDeletedPopup(false)}
-        />
-      )}
+      <div className="p-4 bg-gray-100 rounded-xl">
+        <strong>Total Fee:</strong> {student.totalFee}
+      </div>
+
+      <div className="p-4 bg-gray-100 rounded-xl">
+        <strong>Paid:</strong> {student.feePaid}
+      </div>
+
+      <div className="p-4 bg-gray-100 rounded-xl">
+        <strong>1st Installment:</strong> {student.firstInstallment}
+      </div>
+
+      <div className="p-4 bg-red-100 rounded-xl text-red-700 font-bold">
+        <strong>Remaining Fee:</strong> {student.remainingFee}
+      </div>
+
+    </div>
+
+    <div className="flex gap-4 mt-6 justify-center">
+<Link to={`/admin/update-student/${encodeURIComponent(student.rollNo)}`}>
+  <Button className="bg-blue-600 text-white px-8">Update</Button>
+</Link>
+
+
+
+    </div>
+
+  </div>
+)}
+
+
     </div>
   );
 }
