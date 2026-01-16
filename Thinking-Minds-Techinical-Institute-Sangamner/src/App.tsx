@@ -4,6 +4,20 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+// import { useEffect } from "react";
+
+
+import TricolorConfetti from "./components/TricolorConfetti";
+
+
+//snowfall
+// import Snowfall from "react-snowfall";
+
+
+//26 january unique
+import IndiaBuildsIntro from "./components/IndiaBuildsIntro";
+
+
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +41,26 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+     
+     {/* snowfall
+      <Snowfall
+  snowflakeCount={200}
+  style={{
+    position: "fixed",
+    width: "100vw",
+    height: "100vh",
+    zIndex: 9999,
+    pointerEvents: "none"
+  }}
+/> */}
+
+
+
+<IndiaBuildsIntro />
+<TricolorConfetti show={true} />
+
+
+
       <Toaster />
       <Sonner />
       <BrowserRouter>
@@ -58,9 +92,22 @@ const App = () => (
           {/* 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+
+
+
+            
+
+
       </BrowserRouter>
     </TooltipProvider>
+
+
   </QueryClientProvider>
+
+
+  
 );
+
+
 
 export default App;

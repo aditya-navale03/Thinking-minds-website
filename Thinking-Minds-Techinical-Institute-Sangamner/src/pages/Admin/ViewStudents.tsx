@@ -39,15 +39,17 @@ import { getDoc } from "firebase/firestore";
 export default function RemoveStudent() {
   const [search, setSearch] = useState("");
   const [student, setStudent] = useState<Student | null>(null);
+  const [results, setResults] = useState<Student[]>([]);
+
 
   const [loading, setLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
-const [showDeletedPopup, setShowDeletedPopup] = useState(false);
+  const [showDeletedPopup, setShowDeletedPopup] = useState(false);
 
 
 
-const { dept } = useParams();
-const department = dept || "";
+  const { dept } = useParams();
+  const department = dept || "";
 
 
   // ---------------------------
@@ -91,15 +93,16 @@ const verifyStudent = async () => {
   return false;
 });
 
+if (matches.length === 0) {
+  setNotFound(true);
+  setLoading(false);
+  return;
+}
 
-    if (matches.length === 0) {
-      setNotFound(true);
-      setLoading(false);
-      return;
-    }
+setResults(matches);      // store all matched students
+setStudent(matches[0]);   // show the first match
+console.log("STUDENT DATA:", matches[0]);
 
-    setStudent(matches[0]);
-    console.log("STUDENT DATA:", matches[0]);
 
   } catch (err) {
     console.error("Search error:", err);
@@ -152,7 +155,12 @@ const verifyStudent = async () => {
           onClose={() => setNotFound(false)}
         />
       )}
+      
 {student && (
+
+
+  
+
   <div className="max-w-2xl mx-auto bg-white shadow-xl p-6 rounded-2xl border">
 
     <h2 className="text-2xl font-semibold">{student.fullName}</h2>
@@ -196,12 +204,15 @@ const verifyStudent = async () => {
         <strong>Remaining Fee:</strong> {student.remainingFee}
       </div>
 
+
+
     </div>
 
     <div className="flex gap-4 mt-6 justify-center">
 <Link to={`/admin/update-student/${encodeURIComponent(student.rollNo)}`}>
   <Button className="bg-blue-600 text-white px-8">Update</Button>
 </Link>
+
 
 
 

@@ -170,4 +170,21 @@ All colors MUST be HSL.
   animation: scaleUp 0.25s ease-out;
 }
 
+/* 26 january theme */
+.patriotic-theme {
+  --primary: #ff9933;
+  --secondary: #138808;
+  --accent: #000080;
+}
+
+.patriotic-theme body {
+  background: linear-gradient(
+    to bottom,
+    #ff9933 0%,
+    #ffffff 50%,
+    #138808 100%
+  );
+}
+
+
 }
