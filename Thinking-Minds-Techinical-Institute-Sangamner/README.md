@@ -10,7 +10,7 @@ Git clone https://github.com/aditya-navale03/Thinking-minds-website.git
 
 
 ## change directory
-cd ThinkingMinds/Thinking-minds-website/Thinking-Minds-Techinical-Institute-Sangamner
+cd Thinking-minds-website/Thinking-Minds-Techinical-Institute-Sangamner
 
 
 ## install project dependencies
