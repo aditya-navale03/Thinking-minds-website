@@ -284,14 +284,23 @@ await setDoc(
   //invoice
  const invoicePayload = {
   studentName: fullName,
-  course: course.toUpperCase(),
+  email,
+  mobile,
+  course,
+  admissionNo: finalRollNo,
   totalFee: feeValue,
   feesPaid: firstInstall,
-  remainingFee: Math.max(0, feeValue - firstInstall),
-  invoiceNo: Date.now(),
-  date: new Date().toLocaleDateString(),
-  mobile: mobile
+  remainingFee: feeValue - firstInstall,
+  invoiceNo: `ITS-${new Date().getFullYear()}-${Date.now().toString().slice(-3)}`,
+  date: new Date().toLocaleDateString("en-GB", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric"
+}),
+
+  paymentMode: "Cash"
 }
+
 
 
 generateAndSendInvoice(invoicePayload)
