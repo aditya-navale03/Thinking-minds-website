@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // import { useEffect } from "react";
 
 
-import TricolorConfetti from "./components/TricolorConfetti";
+// import TricolorConfetti from "./components/TricolorConfetti";
 
 
 //snowfall
@@ -15,7 +15,7 @@ import TricolorConfetti from "./components/TricolorConfetti";
 
 
 //26 january unique
-import IndiaBuildsIntro from "./components/IndiaBuildsIntro";
+// import IndiaBuildsIntro from "./components/IndiaBuildsIntro";
 
 
 import Index from "./pages/Index";
@@ -56,8 +56,8 @@ const App = () => (
 
 
 
-<IndiaBuildsIntro />
-<TricolorConfetti show={true} />
+{/* <IndiaBuildsIntro />
+<TricolorConfetti show={true} /> */}
 
 
 
