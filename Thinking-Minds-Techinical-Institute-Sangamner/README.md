@@ -1,6 +1,28 @@
+## how to run locally in your pc
+
+# Install nodejs and npm 
+# check for version
+1. node -v
+2. npm -v
+
+## clone GitHUb repository
+Git clone https://github.com/aditya-navale03/Thinking-minds-website.git
+
+
+## change directory
+cd ThinkingMinds/Thinking-minds-website/Thinking-Minds-Techinical-Institute-Sangamner
+
+
+## install project dependencies
+npm install OR npm i
+
+## run development server
+npm run dev
+
+
+
+
 ## deployed link ##
-
-
 https://thinking-minds-website.vercel.app/
 
 

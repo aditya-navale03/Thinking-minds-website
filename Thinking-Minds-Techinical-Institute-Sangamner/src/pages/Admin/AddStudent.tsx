@@ -10,6 +10,13 @@ import { courses } from "../../data/courses";
 import BackButton from "../../components/ui/backbutton";
 
 
+
+//imports for invoice template generator
+import { toJpeg } from "html-to-image"
+import { useRef } from "react"
+import InvoiceTemplate from "../../components/invoice/InvoiceTemplate"
+
+
 import { doc, setDoc, arrayUnion } from "firebase/firestore";
 
 // const CLOUDINARY_CLOUD_NAME = "deqklavmi"; 
@@ -36,6 +43,14 @@ interface FormErrors {
 }
 
 export default function AddStudent() {
+
+
+  // invoice
+  const invoiceRef = useRef<HTMLDivElement>(null)
+  const [invoiceData, setInvoiceData] = useState<any>(null)
+
+
+
   const navigate = useNavigate();
   const location = useLocation();
   const department = location.state?.dept || "";
@@ -265,11 +280,76 @@ await setDoc(
   // ❌ remove alert and navigate
   // ❌ remove page redirect
 
+
+  //invoice
+ const invoicePayload = {
+  studentName: fullName,
+  course: course.toUpperCase(),
+  totalFee: feeValue,
+  feesPaid: firstInstall,
+  remainingFee: Math.max(0, feeValue - firstInstall),
+  invoiceNo: Date.now(),
+  date: new Date().toLocaleDateString(),
+  mobile: mobile
+}
+
+
+generateAndSendInvoice(invoicePayload)
+
+
   // ✔ show success popup
   setShowSuccess(true);
 
   setLoading(false);
 };
+
+
+//invoice
+const generateAndSendInvoice = async (student: any) => {
+  setInvoiceData(student)
+
+  setTimeout(async () => {
+    if (!invoiceRef.current) {
+      alert("Invoice not ready")
+      return
+    }
+
+    try {
+      const images = invoiceRef.current.querySelectorAll("img")
+      await Promise.all(
+        Array.from(images).map(
+          img =>
+            img.complete
+              ? Promise.resolve()
+              : new Promise(resolve => {
+                  img.onload = resolve
+                  img.onerror = resolve
+                })
+        )
+      )
+
+      const dataUrl = await toJpeg(invoiceRef.current, {
+        quality: 0.95,
+        skipFonts: true,
+        cacheBust: true
+      })
+
+      const link = document.createElement("a")
+      link.download = `invoice-${student.studentName}.jpg`
+      link.href = dataUrl
+      link.click()
+
+      const msg = "Your fees invoice"
+      window.open(
+        `https://wa.me/91${student.mobile}?text=${encodeURIComponent(msg)}`,
+        "_blank"
+      )
+    } catch (err) {
+      console.error("IMAGE ERROR:", err)
+      alert("Invoice image generation failed")
+    }
+  }, 800)
+}
 
 
 
@@ -683,9 +763,17 @@ const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|in|org|net|edu|gov)$/;
     onClose={() => setShowSuccess(false)}
   />
 )}
+{invoiceData && (
+  <div style={{ position: "fixed", left: "-9999px", top: 0 }}>
+    <div ref={invoiceRef}>
+      <InvoiceTemplate data={invoiceData} />
+    </div>
+  </div>
+)}
+
 
 
 </div>
 
   );
-}
+  }
