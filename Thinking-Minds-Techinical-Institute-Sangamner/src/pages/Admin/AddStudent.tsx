@@ -10,7 +10,6 @@ import { courses } from "../../data/courses";
 import BackButton from "../../components/ui/backbutton";
 
 
-
 //imports for invoice template generator
 import { toJpeg } from "html-to-image"
 import { useRef } from "react"
@@ -29,6 +28,10 @@ import { db, storage } from "../../firebase/firebaseConfig";
 import { collection, addDoc } from "firebase/firestore";
 //import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
+//recept
+import { generateReceiptNumber } from "../../utils/generateReceiptNumber";
+
+
 interface FormErrors {
   firstName?: string;
   middleName?: string;
@@ -38,6 +41,7 @@ interface FormErrors {
   course?: string;
   totalFee?: string;
   firstInstallment?: string;
+  paymentMode?: string;
   mobile?: string;
   aadhar?: string;
 }
@@ -49,6 +53,9 @@ export default function AddStudent() {
   const invoiceRef = useRef<HTMLDivElement>(null)
   const [invoiceData, setInvoiceData] = useState<any>(null)
 
+
+  //payment mode
+  const [paymentMode, setPaymentMode] = useState<"Cash" | "Online">("Cash");
 
 
   const navigate = useNavigate();
@@ -167,6 +174,10 @@ const [filteredCourses, setFilteredCourses] = useState<string[]>(courseOptions);
   const validate = () => {
     const temp: FormErrors = {};
 
+    //payment
+    if (!paymentMode) temp.paymentMode = "Payment mode required";
+
+
     if (!firstName.trim()) temp.firstName = "First name required";
 
     // ⭐ Middle Name validation added
@@ -232,6 +243,11 @@ if (!email.trim()) {
   const finalRollNo =
     rollNo || generateRollNoValue(firstName, aadhar, lastName, department);
 
+// 🔢 Generate Receipt Number
+const dept =
+  department.toUpperCase().includes("IT") ? "IT" : "CIVIL";
+
+const receiptNo = await generateReceiptNumber(dept);
 
     //the sample code for uploading to firebase section wise
 
@@ -239,19 +255,21 @@ await setDoc(
   doc(db, "students", department.toLowerCase()),
   {
     students: arrayUnion({
-      rollNo: finalRollNo,
-      fullName,
-      dob,
-      email: email.toLowerCase(),
-      course: course.toUpperCase(),
-      aadhar: aadhar.replace(/\D/g, ""),
-      mobile,
-      totalFee: feeValue,
-      firstInstallment: firstInstall,
-      remainingFee: Math.max(0, feeValue - firstInstall),
-      feePaid: firstInstall,
-      photoURL: ""
-    })
+  rollNo: finalRollNo,
+  fullName,
+  dob,
+  email: email.toLowerCase(),
+  course: course.toUpperCase(),
+  aadhar: aadhar.replace(/\D/g, ""),
+  mobile,
+  totalFee: feeValue,
+  firstInstallment: firstInstall,
+  remainingFee: Math.max(0, feeValue - firstInstall),
+  feePaid: firstInstall,
+  paymentMode,
+  receiptNo,        // 👈 ADD THIS
+  photoURL: ""
+})
   },
   { merge: true }
 );
@@ -291,14 +309,14 @@ await setDoc(
   totalFee: feeValue,
   feesPaid: firstInstall,
   remainingFee: feeValue - firstInstall,
-  invoiceNo: `ITS-${new Date().getFullYear()}-${Date.now().toString().slice(-3)}`,
+  receiptNo,
   date: new Date().toLocaleDateString("en-GB", {
   day: "2-digit",
   month: "short",
   year: "numeric"
 }),
 
-  paymentMode: "Cash"
+  paymentMode
 }
 
 
@@ -344,7 +362,7 @@ const generateAndSendInvoice = async (student: any) => {
       })
 
       const link = document.createElement("a")
-      link.download = `invoice-${student.studentName}.jpg`
+      link.download = `receipt-${student.receiptNo}.jpg`
       link.href = dataUrl
       link.click()
 
@@ -656,9 +674,36 @@ const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|in|org|net|edu|gov)$/;
             }}
             className="w-full border px-3 py-2 rounded"
           />
+ </div>
+
+{/* PAYMENT MODE + REMAINING FEE (SIDE BY SIDE) */}
+<div>
+  {errors.paymentMode && (
+    <p className="text-red-600 text-sm">{errors.paymentMode}</p>
+  )}
+  <label>Payment Mode</label>
+  <select
+    value={paymentMode}
+    onChange={(e) =>
+      setPaymentMode(e.target.value as "Cash" | "Online")
+    }
+    className="w-full border px-3 py-2 rounded"
+  >
+    <option value="Cash">Cash</option>
+    <option value="Online">Online</option>
+  </select>
+</div>
+
+<div>
+  <label>Remaining Fee</label>
+  <input
+    value={remainingFee}
+    readOnly
+    className="w-full border px-3 py-2 rounded bg-gray-100"
+  />
+</div>
 
           
-        </div>
 
   {/* DEPARTMENT */}
 <div>
@@ -681,15 +726,6 @@ const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|in|org|net|edu|gov)$/;
 </div>
 
 
-  {/* Remaining Fee */}
-  <div className="mt-2">
-            <label>Remaining Fee</label>
-            <input
-              value={remainingFee}
-              readOnly
-              className="w-full border px-3 py-2 rounded bg-gray-100"
-            />
-          </div>
 
 
 {/* new code  */}

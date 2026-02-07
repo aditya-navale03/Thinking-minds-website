@@ -2,7 +2,7 @@ const InvoiceTemplate = ({ data }) => {
   return (
     <div className="max-w-3xl mx-auto bg-white p-6 border text-sm">
       
-      <h1 className="text-lg font-bold mb-2">FEE INVOICE :</h1>
+      <h1 className="text-lg font-bold mb-2">FEE RECEIPT :</h1>
 
       <div className="flex justify-between mb-4">
         <div>
@@ -19,7 +19,7 @@ const InvoiceTemplate = ({ data }) => {
 
         <div className="text-right">
 <img
-  src="/logo.png"
+  src="/receiptlogo.jpeg"
   className="h-60 w-60 object-contain"
   loading="eager"
 />
@@ -38,9 +38,18 @@ const InvoiceTemplate = ({ data }) => {
         </div>
 
         <div className="text-right">
-          <p><span className="font-semibold">Receipt No:</span> {data.invoiceNo}</p>
-          <p><span className="font-semibold">Date:</span> {data.date}</p>
-        </div>
+  <p>
+    <span className="font-semibold">Receipt No:</span> {data.receiptNo}
+  </p>
+
+  <p>
+    <span className="font-semibold">Date:</span> {data.date}
+  </p>
+
+  <p>
+    <span className="font-semibold">Payment Mode:</span> {data.paymentMode}
+  </p>
+</div>
       </div>
 
       <p className="mb-4">
@@ -62,7 +71,7 @@ const InvoiceTemplate = ({ data }) => {
         </thead>
         <tbody>
           <tr>
-            <td className="border p-2">{data.invoiceNo}</td>
+            <td className="border p-2">{data.receiptNo}</td>
             <td className="border p-2">{data.date}</td>
             <td className="border p-2">0</td>
             <td className="border p-2">₹{data.feesPaid}</td>
