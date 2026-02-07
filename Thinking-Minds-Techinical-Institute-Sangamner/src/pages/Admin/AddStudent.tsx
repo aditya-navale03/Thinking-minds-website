@@ -11,7 +11,8 @@ import BackButton from "../../components/ui/backbutton";
 
 
 //imports for invoice template generator
-import { toJpeg } from "html-to-image"
+import html2canvas from "html2canvas"
+import jsPDF from "jspdf"
 import { useRef } from "react"
 import InvoiceTemplate from "../../components/invoice/InvoiceTemplate"
 
@@ -354,19 +355,51 @@ const generateAndSendInvoice = async (student: any) => {
                 })
         )
       )
+const canvas = await html2canvas(
+  invoiceRef.current!,
+  {
+    scale: 2,
+    useCORS: true
+  }
+)
 
-      const dataUrl = await toJpeg(invoiceRef.current, {
-        quality: 0.95,
-        skipFonts: true,
-        cacheBust: true
-      })
+const imgData = canvas.toDataURL("image/png")
 
-      const link = document.createElement("a")
-      link.download = `receipt-${student.receiptNo}.jpg`
-      link.href = dataUrl
-      link.click()
+const pdf = new jsPDF("p", "mm", "a4")
 
-      const msg = "Your fees invoice"
+const pdfWidth = pdf.internal.pageSize.getWidth()
+const pdfHeight =
+  (canvas.height * pdfWidth) / canvas.width
+
+pdf.addImage(
+  imgData,
+  "PNG",
+  0,
+  0,
+  pdfWidth,
+  pdfHeight
+)
+
+pdf.save(`receipt-${student.studentName}.pdf`)
+
+
+      const msg = `
+Dear ${student.studentName},
+
+Congrats! 🎉 Your enrollment is successfully completed at
+THINKING MINDS TECHNICAL TRAINING INSTITUTE
+
+Admission Name : ${student.studentName}
+Enrollment No : ${student.admissionNo}
+Course : ${student.course}
+Total Course Fee : ₹${student.totalFee}/-
+
+Please submit your Passport Size Photo & Aadhar Card Xerox at the institute office.
+
+Thanks & Regards,
+THINKING MINDS TECHNICAL TRAINING INSTITUTE
+`
+
       window.open(
         `https://wa.me/91${student.mobile}?text=${encodeURIComponent(msg)}`,
         "_blank"
