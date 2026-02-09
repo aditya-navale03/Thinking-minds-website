@@ -65,23 +65,48 @@ const Navbar = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <a href="#home" className="flex items-center space-x-2 group">
-              <div
-                className={`p-2 rounded-lg transition-transform ${
-                  scrolled ? "bg-primary text-primary-foreground" : "bg-accent text-accent-foreground"
-                }`}
-              >
-                <GraduationCap className="h-6 w-6" />
-              </div>
-              <div className="flex flex-col">
-                <span className={`font-display text-xl font-bold ${scrolled ? "text-foreground" : "text-primary-foreground"}`}>
-                  Thinking Minds
-                </span>
-                <span className={`text-xs ${scrolled ? "text-muted-foreground" : "text-primary-foreground/80"}`}>
-                  Technical Institute
-                </span>
-              </div>
-            </a>
+           <a href="#home" className="flex items-center space-x-3 group">
+
+  {/* LOGO CONTAINER */}
+  <div
+  className={`flex items-center justify-center rounded-xl p-2 h-12 w-12 md:h-14 md:w-14 transition-all duration-300
+
+    ${
+      scrolled
+  ? "bg-white shadow-lg border"
+  : "bg-white/80 backdrop-blur-md border border-white/40"
+
+    }`}
+  >
+    <img
+      src="/logo.png"
+      alt="Thinking Minds Logo"
+      className="h-12 w-12 md:h-14 md:w-14 object-contain transition-transform duration-300 group-hover:scale-105"
+    />
+  </div>
+
+  {/* TEXT */}
+  <div className="flex flex-col leading-tight">
+    <span
+      className={`font-display text-lg md:text-xl font-bold tracking-wide ${
+        scrolled ? "text-foreground" : "text-primary-foreground"
+      }`}
+    >
+      Thinking Minds
+    </span>
+
+    <span
+      className={`text-[11px] md:text-xs tracking-wider ${
+        scrolled
+          ? "text-muted-foreground"
+          : "text-primary-foreground/80"
+      }`}
+    >
+      Technical Institute
+    </span>
+  </div>
+
+</a>
 
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-1">
