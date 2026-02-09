@@ -390,7 +390,7 @@ Congrats! 🎉 Your enrollment is successfully completed at
 THINKING MINDS TECHNICAL TRAINING INSTITUTE
 
 Admission Name : ${student.studentName}
-Enrollment No : ${student.admissionNo}
+Rollno No : ${student.admissionNo}
 Course : ${student.course}
 Total Course Fee : ₹${student.totalFee}/-
 
