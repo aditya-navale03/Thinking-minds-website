@@ -4,6 +4,8 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import MigrateStudents from "./pages/Admin/MigrateStudents";
+
 // import { useEffect } from "react";
 
 
@@ -91,7 +93,16 @@ const App = () => (
 
           {/* 404 */}
           <Route path="*" element={<NotFound />} />
+        
+
+        <Route
+  path="/migrate-students"
+  element={<MigrateStudents />}
+/>
+
+        
         </Routes>
+
 
 
 

@@ -17,7 +17,7 @@ import { useRef } from "react"
 import InvoiceTemplate from "../../components/invoice/InvoiceTemplate"
 
 
-import { doc, setDoc, arrayUnion } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 // const CLOUDINARY_CLOUD_NAME = "deqklavmi"; 
 // const CLOUDINARY_UPLOAD_PRESET = "students"; // UNSIGNED preset name
@@ -252,10 +252,25 @@ const receiptNo = await generateReceiptNumber(dept);
 
     //the sample code for uploading to firebase section wise
 
-await setDoc(
-  doc(db, "students", department.toLowerCase()),
-  {
-    students: arrayUnion({
+const studentRef = doc(
+  db,
+  "students",
+  department.toLowerCase(),
+  "students",
+  email.toLowerCase()
+);
+
+// 🔍 Duplicate email check
+const existing = await getDoc(studentRef);
+
+if (existing.exists()) {
+  setLoading(false);
+  alert("Email already exists ❌");
+  return;
+}
+
+// ✅ Save student as document
+await setDoc(studentRef, {
   rollNo: finalRollNo,
   fullName,
   dob,
@@ -268,12 +283,10 @@ await setDoc(
   remainingFee: Math.max(0, feeValue - firstInstall),
   feePaid: firstInstall,
   paymentMode,
-  receiptNo,        // 👈 ADD THIS
+  receiptNo,
   photoURL: ""
-})
-  },
-  { merge: true }
-);
+});
+
 
 
   // // ---------------- SAVE TO FIRESTORE ----------------
