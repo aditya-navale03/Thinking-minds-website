@@ -8,6 +8,7 @@ import { UserPlus, UserMinus, LogOut, Users } from "lucide-react";
 // dashboard
 import { LayoutDashboard } from "lucide-react";
 
+import { Bell } from "lucide-react";
 
 export default function ITAdminDashboard() {
   const navigate = useNavigate();
@@ -69,14 +70,16 @@ bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl shadow-sm"
             <LayoutDashboard size={20} /> Dashboard Analytics </Button>
 
           {/* reminder */}
-          <Button
-  className="w-full py-3 flex items-center justify-center gap-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl shadow-sm"
+         <Button
+  className="w-full py-3 text-base flex items-center justify-center gap-3
+             bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl shadow-sm"
   onClick={() =>
     navigate("/admin/reminders", { state: { dept: "it" } })
   }
 >
-  Send Fee Reminders
+  <Bell size={20} /> All Students Fee Reminders
 </Button>
+
 
 
           {/* Logout */}

@@ -23,8 +23,7 @@ npm run dev
 
 
 ## deployed link ##
-https://thinking-minds-website.vercel.app/
-
+thinkingmindstraining.vercel.app
 
 ## tech stack ##
 1. React

@@ -102,7 +102,7 @@ const Navbar = () => {
           : "text-primary-foreground/80"
       }`}
     >
-      Technical Institute
+      Technical  training Institute
     </span>
   </div>
 

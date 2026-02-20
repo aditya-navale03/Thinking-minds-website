@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebaseConfig";
+import { Bell } from "lucide-react";
+
 
 // dashboard
 import { LayoutDashboard } from "lucide-react";
@@ -92,14 +94,16 @@ onClick={() => navigate("/admin/dashboard", { state: { dept: "civil" } })}
 <LayoutDashboard size={20} /> Dashboard Analytics </Button>
 
             {/* reminder */}
-            <Button
-  className="w-full py-3 flex items-center justify-center gap-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl shadow-sm"
+         <Button
+  className="w-full py-3 text-base flex items-center justify-center gap-3
+             bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl shadow-sm"
   onClick={() =>
     navigate("/admin/reminders", { state: { dept: "civil" } })
   }
 >
-  Send Fee Reminders
+  <Bell size={20} /> All Students Fee Reminders
 </Button>
+
 
 
           {/* Logout */}
