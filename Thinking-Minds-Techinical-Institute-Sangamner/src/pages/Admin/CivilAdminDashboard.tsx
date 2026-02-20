@@ -3,6 +3,10 @@ import { useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebaseConfig";
 
+// dashboard
+import { LayoutDashboard } from "lucide-react";
+
+
 import { Button } from "../../components/ui/button";
 import { UserPlus, UserMinus, LogOut, Users } from "lucide-react";
 
@@ -72,6 +76,31 @@ export default function CivilAdminDashboard() {
           >
             <UserMinus size={20} /> Remove Student
           </Button>
+              
+
+            {/* reminder */}
+            
+
+          {/* dashboard */}
+          <Button
+className="w-full py-3 text-base flex items-center justify-center gap-3
+bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl shadow-sm"
+onClick={() => navigate("/admin/dashboard", { state: { dept: "civil" } })}
+
+>
+
+<LayoutDashboard size={20} /> Dashboard Analytics </Button>
+
+            {/* reminder */}
+            <Button
+  className="w-full py-3 flex items-center justify-center gap-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl shadow-sm"
+  onClick={() =>
+    navigate("/admin/reminders", { state: { dept: "civil" } })
+  }
+>
+  Send Fee Reminders
+</Button>
+
 
           {/* Logout */}
           <Button

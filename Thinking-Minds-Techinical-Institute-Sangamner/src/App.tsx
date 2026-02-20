@@ -4,10 +4,16 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+//reminder
+import Reminders from "./pages/Admin/Reminders";
+
+
 import MigrateStudents from "./pages/Admin/MigrateStudents";
 
 // import { useEffect } from "react";
 
+//dashboard
+import Dashboard from "./pages/Admin/Dashboard";
 
 // import TricolorConfetti from "./components/TricolorConfetti";
 
@@ -87,6 +93,13 @@ const App = () => (
           {/* Student Actions */}
           <Route path="/admin/add-student" element={<AddStudent />} />
           <Route path="/admin/remove-student" element={<RemoveStudent />} />
+
+          {/* dashboard route */}
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+
+        {/* reminder */}
+        <Route path="/admin/reminders" element={<Reminders />} />
+
 
           {/* Update student needs ID */}
           <Route path="/admin/update-student/:id" element={<UpdateStudent />} />

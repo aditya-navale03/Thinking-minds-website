@@ -5,6 +5,10 @@ import { auth } from "../../firebase/firebaseConfig";
 import { Button } from "../../components/ui/button";
 import { UserPlus, UserMinus, LogOut, Users } from "lucide-react";
 
+// dashboard
+import { LayoutDashboard } from "lucide-react";
+
+
 export default function ITAdminDashboard() {
   const navigate = useNavigate();
 
@@ -53,6 +57,27 @@ export default function ITAdminDashboard() {
           >
             <UserMinus size={20} /> Remove Student
           </Button>
+
+          {/* dashboard */}
+          <Button
+            className="w-full py-3 text-base flex items-center justify-center gap-3
+bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl shadow-sm"
+            onClick={() => navigate("/admin/dashboard", { state: { dept: "it" } })}
+
+          >
+
+            <LayoutDashboard size={20} /> Dashboard Analytics </Button>
+
+          {/* reminder */}
+          <Button
+  className="w-full py-3 flex items-center justify-center gap-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl shadow-sm"
+  onClick={() =>
+    navigate("/admin/reminders", { state: { dept: "it" } })
+  }
+>
+  Send Fee Reminders
+</Button>
+
 
           {/* Logout */}
           <Button

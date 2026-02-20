@@ -3,11 +3,8 @@ import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { db } from "../../firebase/firebaseConfig";
 import {
-  // collection,
-  // getDocs,
-  // deleteDoc,
-  doc,
-  
+  collection,
+  getDocs,
 } from "firebase/firestore";
 
 import { useParams } from "react-router-dom";
@@ -66,43 +63,51 @@ const verifyStudent = async () => {
   setLoading(true);
 
   try {
-    const dept = department?.toLowerCase();
+    const deptId = department.toLowerCase();
 
-    if (!dept) {
-      console.error("Department missing. Pass {state: { dept: 'it' }} when navigating.");
+    if (!deptId) {
+      console.error("Department missing");
       setLoading(false);
       return;
     }
 
-    const docSnap = await getDoc(doc(db, "students", dept));
+    // 🔥 Fetch students subcollection
+    const snap = await getDocs(
+      collection(db, "students", deptId, "students")
+    );
 
-    const students = docSnap.exists() ? docSnap.data().students || [] : [];
+    const students: Student[] = snap.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<Student, "id">),
+    }));
 
     const term = raw.toUpperCase();
 
-    const matches = students.filter((s: any) => {
-  const name = (s.fullName || "").toUpperCase();
+    const matches = students.filter((s) => {
+      const name = (s.fullName || "").toUpperCase();
+      const email = (s.email || "").toUpperCase();
+      const course = (s.course || "").toUpperCase();
 
-  // direct match anywhere in name
-  if (name.includes(term)) return true;
+      if (name.includes(term)) return true;
+      if (email.includes(term)) return true;
+      if (course.includes(term)) return true;
 
-  // match first/last parts starting with search term
-  const parts = name.split(/\s+/).filter(Boolean);
-  if (parts.some((p) => p.startsWith(term))) return true;
+      const parts = name.split(/\s+/).filter(Boolean);
+      if (parts.some((p) => p.startsWith(term))) return true;
 
-  return false;
-});
+      return false;
+    });
 
-if (matches.length === 0) {
-  setNotFound(true);
-  setLoading(false);
-  return;
-}
+    if (matches.length === 0) {
+      setNotFound(true);
+      setLoading(false);
+      return;
+    }
 
-setResults(matches);      // store all matched students
-setStudent(matches[0]);   // show the first match
-console.log("STUDENT DATA:", matches[0]);
+    setResults(matches);
+    setStudent(matches[0]);
 
+    console.log("STUDENT DATA:", matches[0]);
 
   } catch (err) {
     console.error("Search error:", err);
