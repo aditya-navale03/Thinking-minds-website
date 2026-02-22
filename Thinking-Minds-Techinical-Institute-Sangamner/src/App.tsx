@@ -88,7 +88,7 @@ const App = () => (
           <Route path="/admin/dashboard-it" element={<ITDashboard />} />
 
           {/* View students department-wise */}
-          <Route path="/admin/students/:dept" element={<ViewStudents />} />
+          <Route path="/admin/students/:dept" element={<ViewStudents />} /> 
 
           {/* Student Actions */}
           <Route path="/admin/add-student" element={<AddStudent />} />
@@ -102,9 +102,7 @@ const App = () => (
 
 
           {/* Update student needs ID */}
-          <Route path="/admin/update-student/:id" element={<UpdateStudent />} />
-
-          {/* 404 */}
+<Route path="/admin/update-student/:dept/:id" element={<UpdateStudent />} />          {/* 404 */}
           <Route path="*" element={<NotFound />} />
         
 
