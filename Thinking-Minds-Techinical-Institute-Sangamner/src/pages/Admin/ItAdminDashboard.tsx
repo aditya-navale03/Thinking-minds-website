@@ -41,10 +41,12 @@ export default function ITAdminDashboard() {
 
           {/* View IT Students */}
           <Button
+          
             className="w-full py-3 text-base flex items-center justify-center gap-3
                        bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl shadow-sm"
             onClick={() => navigate("/admin/students/it")}
           >
+            
             <Users size={20} /> View IT Students
           </Button>
 
