@@ -1,79 +1,46 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { db } from "../../firebase/firebaseConfig";
-import {
-  collection,
-  getDocs,
-} from "firebase/firestore";
-
-import { useParams } from "react-router-dom";
-
-
+import { collection, getDocs } from "firebase/firestore";
 import SuccessScreen from "../../components/ui/SuccessScreen";
+
+import BackButton from "../../components/ui/backbutton";
 
 interface Student {
   id: string;
   fullName: string;
+  dob: string;
   email: string;
+  course: string;
   mobile: string;
   aadhar: string;
-  course: string;
-  dob: string;
-  rollNo: string;
-  photoURL: string;
   totalFee: number;
-  feePaid: number;
   firstInstallment: number;
   remainingFee: number;
+  paymentMode: string;
+  rollNo: string;
 }
-
-
-// import { useLocation } from "react-router-dom";
-import { getDoc } from "firebase/firestore";
-
 
 export default function RemoveStudent() {
   const [search, setSearch] = useState("");
-  const [student, setStudent] = useState<Student | null>(null);
   const [results, setResults] = useState<Student[]>([]);
-
-
   const [loading, setLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
-  const [showDeletedPopup, setShowDeletedPopup] = useState(false);
-
-
 
   const { dept } = useParams();
   const department = dept || "";
 
+  // SEARCH
+  const verifyStudent = async () => {
+    const raw = search.trim();
+    if (!raw) return;
 
-  // ---------------------------
-  // VERIFY STUDENT (improved partial + case-insensitive search)
-  // ---------------------------
-const verifyStudent = async () => {
-  setStudent(null);
-  setNotFound(false);
-  setShowDeletedPopup(false);
+    setLoading(true);
+    setNotFound(false);
 
-  const raw = search.trim();
-  if (!raw) return;
-
-  setLoading(true);
-
-  try {
-    const deptId = department.toLowerCase();
-
-    if (!deptId) {
-      console.error("Department missing");
-      setLoading(false);
-      return;
-    }
-
-    // 🔥 Fetch students subcollection
     const snap = await getDocs(
-      collection(db, "students", deptId, "students")
+      collection(db, "students", department, "students")
     );
 
     const students: Student[] = snap.docs.map((doc) => ({
@@ -83,150 +50,168 @@ const verifyStudent = async () => {
 
     const term = raw.toUpperCase();
 
-    const matches = students.filter((s) => {
-      const name = (s.fullName || "").toUpperCase();
-      const email = (s.email || "").toUpperCase();
-      const course = (s.course || "").toUpperCase();
+    const matches = students.filter((s) =>
+      s.fullName?.toUpperCase().includes(term)
+    );
 
-      if (name.includes(term)) return true;
-      if (email.includes(term)) return true;
-      if (course.includes(term)) return true;
+    if (matches.length === 0) setNotFound(true);
+    else setResults(matches);
 
-      const parts = name.split(/\s+/).filter(Boolean);
-      if (parts.some((p) => p.startsWith(term))) return true;
-
-      return false;
-    });
-
-    if (matches.length === 0) {
-      setNotFound(true);
-      setLoading(false);
-      return;
-    }
-
-    setResults(matches);
-    setStudent(matches[0]);
-
-    console.log("STUDENT DATA:", matches[0]);
-
-  } catch (err) {
-    console.error("Search error:", err);
-  } finally {
     setLoading(false);
-  }
-};
+  };
 
-
-
-//   const location = useLocation();
-// const department = location.state?.dept || "";
-
-  
+  // INFO BOX
+  const Box = ({ label, value, highlight }: any) => (
+    <div
+      className={`p-4 rounded-xl border ${highlight
+        ? "bg-red-50 border-red-200"
+        : "bg-gray-50 border-gray-200"
+        }`}
+    >
+      <p className="text-sm text-gray-500">{label}</p>
+      <p className="font-semibold text-gray-800 mt-1">{value}</p>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-10">
-      <h1 className="text-3xl font-bold mb-6 text-center">Search Student</h1>
 
-      {/* Search Box */}
+      {/* SEARCH HEADER WITH BACK BUTTON */}
+      <div className="max-w-5xl mx-auto mb-8 bg-white shadow rounded-2xl p-6">
+
+        <div className="flex items-center justify-between">
+
+          {/* Back Button Left */}
+          <BackButton />
+
+          {/* Title Center */}
+          <div className="flex-1 text-center">
+            <h1 className="text-3xl font-bold text-gray-800">
+              Student Search Panel
+            </h1>
+            <p className="text-gray-500 text-sm">
+              Search student records & fee details
+            </p>
+          </div>
+
+          {/* Spacer Right (balances layout) */}
+          <div className="w-10"></div>
+
+        </div>
+
+      </div>
+      {/* SEARCH BOX */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
           verifyStudent();
         }}
-        className="max-w-xl mx-auto flex gap-3 mb-7"
+        className="max-w-2xl mx-auto flex gap-3 mb-10 bg-white p-3 rounded-2xl shadow"
       >
         <input
           type="text"
-          placeholder="Enter any part of name, email or course..."
-          className="flex-1 p-3 border rounded-xl shadow-sm"
+          placeholder="Search student name..."
+          className="flex-1 p-3 border rounded-xl"
           value={search}
-          onChange={(e) => setSearch(e.target.value)} // keep user typing natural
+          onChange={(e) => setSearch(e.target.value)}
         />
 
-        <Button type="submit" className="bg-blue-600 text-white px-6">
-          Verify
+        <Button className="bg-blue-600 text-white px-6">
+          Search
         </Button>
       </form>
 
-      {/* Loading */}
-      {loading && <p className="text-center text-gray-600">Searching...</p>}
+      {loading && <p className="text-center">Searching...</p>}
 
-      {/* Not Found Popup */}
       {notFound && (
         <SuccessScreen
           title="Not Found"
-          message="No student found matching your search."
+          message="No student found"
           buttonText="Close"
           onClose={() => setNotFound(false)}
         />
       )}
-      
-{student && (
+
+      {/* RESULTS */}
+      {results.length > 0 && (
+        <div className="max-w-5xl mx-auto space-y-8">
+
+          {results.map((student) => (
+            <div
+              key={student.id}
+              className="bg-white shadow-xl rounded-3xl p-8 border"
+            >
+
+              {/* HEADER */}
+              <div className="flex justify-between items-center mb-6">
+
+                <div>
+                  <h2 className="text-2xl font-bold">
+                    {student.fullName}
+                  </h2>
+                  <p className="text-gray-500">
+                    {student.rollNo}
+                  </p>
+                </div>
+
+                {student.remainingFee > 0 ? (
+                  <Link
+                    to={`/admin/update-student/${department}/${student.id}`}                  >
+                    <Button className="bg-blue-600 text-white">
+                      Update
+                    </Button>
+                  </Link>
+                ) : (
+                  <span className="px-5 py-2 bg-green-100 text-green-700 rounded-full">
+                    Paid
+                  </span>
+                )}
+
+              </div>
+
+              {/* GRID */}
+              <div className="grid md:grid-cols-3 gap-4">
 
 
-  
+                <Box label="Full Name" value={student.fullName} />
+                <Box label="DOB" value={student.dob} />
+                <Box label="Email" value={student.email} />
 
-  <div className="max-w-2xl mx-auto bg-white shadow-xl p-6 rounded-2xl border">
+                <Box label="Course" value={student.course} />
+                <Box label="Mobile" value={student.mobile} />
+                <Box label="Aadhaar" value={student.aadhar} />
 
-    <h2 className="text-2xl font-semibold">{student.fullName}</h2>
-    <p className="text-gray-600">{student.email}</p>
+                <Box
+                  label="Total Fee"
+                  value={`₹ ${student.totalFee?.toLocaleString("en-IN")}`}
+                />
 
-    <div className="grid grid-cols-2 gap-4 mt-4">
-
-      <div className="p-4 bg-gray-100 rounded-xl">
-        <strong>Roll No:</strong> {student.rollNo}
-      </div>
-
-      <div className="p-4 bg-gray-100 rounded-xl">
-        <strong>Mobile:</strong> {student.mobile}
-      </div>
-
-      <div className="p-4 bg-gray-100 rounded-xl">
-        <strong>Aadhar:</strong> {student.aadhar}
-      </div>
-
-      <div className="p-4 bg-gray-100 rounded-xl">
-        <strong>DOB:</strong> {student.dob}
-      </div>
-
-      <div className="p-4 bg-gray-100 rounded-xl">
-        <strong>Course:</strong> {student.course}
-      </div>
-
-      <div className="p-4 bg-gray-100 rounded-xl">
-        <strong>Total Fee:</strong> {student.totalFee}
-      </div>
-
-      <div className="p-4 bg-gray-100 rounded-xl">
-        <strong>Paid:</strong> {student.feePaid}
-      </div>
-
-      <div className="p-4 bg-gray-100 rounded-xl">
-        <strong>1st Installment:</strong> {student.firstInstallment}
-      </div>
-
-      <div className="p-4 bg-red-100 rounded-xl text-red-700 font-bold">
-        <strong>Remaining Fee:</strong> {student.remainingFee}
-      </div>
+                <Box
+                  label="First Installment"
+                  value={`₹ ${student.firstInstallment?.toLocaleString("en-IN")}`}
+                />
 
 
+                <Box
+                  label="Remaining Fee"
+                  value={`₹ ${(
+                    student.totalFee - student.firstInstallment
+                  ).toLocaleString("en-IN")}`}
+                  highlight={
+                    student.totalFee - student.firstInstallment > 0
+                  }
+                />
 
-    </div>
+                <Box label="Payment Mode" value={student.paymentMode} />
+                <Box label="Roll No" value={student.rollNo} />
 
-    <div className="flex gap-4 mt-6 justify-center">
-<Link to={`/admin/update-student/${encodeURIComponent(student.rollNo)}`}>
-  <Button className="bg-blue-600 text-white px-8">Update</Button>
-</Link>
+              </div>
 
+            </div>
+          ))}
 
-
-
-    </div>
-
-  </div>
-)}
-
-
+        </div>
+      )}
     </div>
   );
 }
