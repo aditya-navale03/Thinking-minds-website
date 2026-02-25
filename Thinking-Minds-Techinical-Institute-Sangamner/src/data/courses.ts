@@ -395,5 +395,112 @@ export const courses: Course[] = [
       "Site Development Engineer",
       "Highway Design Engineer"
     ]
-  }
+
+  },
+{
+  id: "autocad-2d",
+  name: "AutoCAD 2D",
+  category: "Civil",
+  duration: "2 Months",
+  fees: "₹18,000",
+  description: "Focused training on 2D drafting using AutoCAD for civil and architectural drawings.",
+  syllabus: [
+    "AutoCAD Interface & Setup",
+    "Drawing Tools (Line, Circle, Arc)",
+    "Modify Tools (Trim, Extend, Offset)",
+    "Layer Management",
+    "Dimensioning Techniques",
+    "Text & Annotations",
+    "Blocks & Symbols",
+    "Layouts & Plotting",
+    "Construction Drawings"
+  ],
+  projects: [
+    "Residential Floor Plan",
+    "Column Layout Plan",
+    "Electrical Layout Drawing",
+    "Submission Drawing Set"
+  ],
+  certifications: [
+    "AutoCAD 2D Drafting Certificate"
+  ],
+  careerOpportunities: [
+    "CAD Draftsman",
+    "2D Design Technician",
+    "Site Drafting Engineer",
+    "Drawing Coordinator"
+  ]
+},
+
+
+{
+  id: "ms-excel",
+  name: "MS Excel",
+  category: "Civil",
+  duration: "2 Months",
+  fees: "₹12,000",
+  description: "Comprehensive Microsoft Excel training from basics to advanced data analysis.",
+  syllabus: [
+    "Excel Interface & Basics",
+    "Data Entry & Formatting",
+    "Formulas & Functions",
+    "Logical Functions (IF, VLOOKUP)",
+    "Charts & Graphs",
+    "Pivot Tables",
+    "Conditional Formatting",
+    "Data Validation",
+    "Dashboard Creation"
+  ],
+  projects: [
+    "Sales Report Dashboard",
+    "Student Database System",
+    "Expense Tracker",
+    "Inventory Management Sheet"
+  ],
+  certifications: [
+    "MS Excel Specialist Certificate"
+  ],
+  careerOpportunities: [
+    "Data Entry Operator",
+    "MIS Executive",
+    "Office Administrator",
+    "Data Analyst (Entry Level)"
+  ]
+},
+
+{
+  id: "estimation-costing-excel",
+  name: "Estimation & Costing (Excel)",
+  category: "Civil",
+  duration: "3 Months",
+  fees: "₹22,000",
+  description: "Learn civil project estimation, BOQ preparation, and costing using Microsoft Excel.",
+  syllabus: [
+    "Introduction to Estimation",
+    "Types of Estimates",
+    "BOQ Preparation",
+    "Material Quantity Calculation",
+    "Rate Analysis",
+    "Labour Cost Calculation",
+    "Excel Formulas for Estimation",
+    "Project Costing Sheets",
+    "Tender Documentation"
+  ],
+  projects: [
+    "Residential Building Estimation",
+    "Road Project Costing",
+    "BOQ Sheet Preparation",
+    "Tender Cost Analysis"
+  ],
+  certifications: [
+    "Estimation & Costing Professional Certificate"
+  ],
+  careerOpportunities: [
+    "Estimation Engineer",
+    "Quantity Surveyor",
+    "Billing Engineer",
+    "Cost Control Engineer"
+  ]
+},
+
 ];
