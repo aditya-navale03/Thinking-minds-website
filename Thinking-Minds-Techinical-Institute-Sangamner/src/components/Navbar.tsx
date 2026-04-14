@@ -92,6 +92,7 @@ const Navbar = () => {
         scrolled ? "text-foreground" : "text-primary-foreground"
       }`}
     >
+      <h1>helloo world</h1>
       Thinking Minds
     </span>
 
