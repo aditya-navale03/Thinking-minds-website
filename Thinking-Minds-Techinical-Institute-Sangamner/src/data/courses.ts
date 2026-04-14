@@ -3,7 +3,7 @@ export interface Course {
   name: string;
   category: "IT" | "Civil";
   duration: string;
-  fees: string;
+  // fees: string;
   description: string;
   syllabus: string[];
   projects: string[];
@@ -17,7 +17,7 @@ export const courses: Course[] = [
     name: "Java Full Stack",
     category: "IT",
     duration: "6 Months",
-    fees: "₹45,000",
+   // fees: "₹45,000",
     description: "Master full-stack Java development with Spring Boot, Hibernate, and modern frontend frameworks.",
     syllabus: [
       "Core Java & OOP Concepts",
@@ -49,7 +49,7 @@ export const courses: Course[] = [
     name: "Python Programming",
     category: "IT",
     duration: "4 Months",
-    fees: "₹35,000",
+   // fees: "₹35,000",
     description: "Learn Python from basics to advanced including Django, Flask, and data science libraries.",
     syllabus: [
       "Python Basics & Syntax",
@@ -81,7 +81,7 @@ export const courses: Course[] = [
     name: "Web Development",
     category: "IT",
     duration: "5 Months",
-    fees: "₹40,000",
+   // fees: "₹40,000",
     description: "Complete web development training covering HTML, CSS, JavaScript, React, and Node.js.",
     syllabus: [
       "HTML5 & Semantic Markup",
@@ -113,7 +113,7 @@ export const courses: Course[] = [
     name: "SQL & DBMS",
     category: "IT",
     duration: "3 Months",
-    fees: "₹25,000",
+   // fees: "₹25,000",
     description: "Comprehensive database management training with SQL, MySQL, and database design.",
     syllabus: [
       "Database Fundamentals",
@@ -145,7 +145,7 @@ export const courses: Course[] = [
     name: "Computer Basics",
     category: "IT",
     duration: "2 Months",
-    fees: "₹15,000",
+   // fees: "₹15,000",
     description: "Foundational computer skills including MS Office, internet, and digital literacy.",
     syllabus: [
       "Computer Fundamentals",
@@ -177,7 +177,7 @@ export const courses: Course[] = [
     name: "AI & Machine Learning",
     category: "IT",
     duration: "6 Months",
-    fees: "₹55,000",
+   // fees: "₹55,000",
     description: "Advanced course covering artificial intelligence, machine learning, and deep learning.",
     syllabus: [
       "Python for AI/ML",
@@ -209,7 +209,7 @@ export const courses: Course[] = [
     name: "AutoCAD 2D/3D",
     category: "Civil",
     duration: "4 Months",
-    fees: "₹30,000",
+    //fees: "₹30,000",
     description: "Complete AutoCAD training for 2D drafting and 3D modeling in civil engineering.",
     syllabus: [
       "AutoCAD Interface & Setup",
@@ -241,7 +241,7 @@ export const courses: Course[] = [
     name: "STAAD Pro",
     category: "Civil",
     duration: "3 Months",
-    fees: "₹35,000",
+   // fees: "₹35,000",
     description: "Structural analysis and design software training for civil engineers.",
     syllabus: [
       "STAAD.Pro Interface",
@@ -273,7 +273,7 @@ export const courses: Course[] = [
     name: "Revit Architecture",
     category: "Civil",
     duration: "4 Months",
-    fees: "₹40,000",
+   // fees: "₹40,000",
     description: "BIM software training for architectural design and building information modeling.",
     syllabus: [
       "Revit Fundamentals",
@@ -305,7 +305,7 @@ export const courses: Course[] = [
     name: "SketchUp",
     category: "Civil",
     duration: "2 Months",
-    fees: "₹20,000",
+    //fees: "₹20,000",
     description: "3D modeling software for architectural and interior design visualization.",
     syllabus: [
       "SketchUp Interface & Tools",
@@ -337,7 +337,7 @@ export const courses: Course[] = [
     name: "3ds Max",
     category: "Civil",
     duration: "5 Months",
-    fees: "₹45,000",
+  //  fees: "₹45,000",
     description: "Professional 3D modeling, animation, and rendering for architectural visualization.",
     syllabus: [
       "3ds Max Interface",
@@ -369,7 +369,7 @@ export const courses: Course[] = [
     name: "Civil 3D",
     category: "Civil",
     duration: "4 Months",
-    fees: "₹38,000",
+   // fees: "₹38,000",
     description: "Civil engineering design software for infrastructure and site development projects.",
     syllabus: [
       "Civil 3D Fundamentals",
@@ -402,7 +402,7 @@ export const courses: Course[] = [
   name: "AutoCAD 2D",
   category: "Civil",
   duration: "2 Months",
-  fees: "₹18,000",
+ //fees: "₹18,000",
   description: "Focused training on 2D drafting using AutoCAD for civil and architectural drawings.",
   syllabus: [
     "AutoCAD Interface & Setup",
@@ -438,7 +438,7 @@ export const courses: Course[] = [
   name: "MS Excel",
   category: "Civil",
   duration: "2 Months",
-  fees: "₹12,000",
+ // fees: "₹12,000",
   description: "Comprehensive Microsoft Excel training from basics to advanced data analysis.",
   syllabus: [
     "Excel Interface & Basics",
@@ -473,7 +473,7 @@ export const courses: Course[] = [
   name: "Estimation & Costing (Excel)",
   category: "Civil",
   duration: "3 Months",
-  fees: "₹22,000",
+ // fees: "₹22,000",
   description: "Learn civil project estimation, BOQ preparation, and costing using Microsoft Excel.",
   syllabus: [
     "Introduction to Estimation",

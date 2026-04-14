@@ -4,6 +4,7 @@ import { Button } from "../../components/ui/button";
 import { db } from "../../firebase/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import SuccessScreen from "../../components/ui/SuccessScreen";
+   import { query, where } from "firebase/firestore";
 
 import BackButton from "../../components/ui/backbutton";
 
@@ -39,9 +40,13 @@ export default function RemoveStudent() {
     setLoading(true);
     setNotFound(false);
 
-    const snap = await getDocs(
-      collection(db, "students", department, "students")
-    );
+
+const q = query(
+  collection(db, "students"),
+  where("department", "==", department.toUpperCase())
+);
+
+const snap = await getDocs(q);
 
     const students: Student[] = snap.docs.map((doc) => ({
       id: doc.id,
@@ -61,8 +66,13 @@ export default function RemoveStudent() {
   };
 
   // INFO BOX
-  const Box = ({ label, value, highlight }: any) => (
-    <div
+type BoxProps = {
+  label: string;
+  value: string | number;
+  highlight?: boolean;
+};
+
+const Box = ({ label, value, highlight }: BoxProps) => (    <div
       className={`p-4 rounded-xl border ${highlight
         ? "bg-red-50 border-red-200"
         : "bg-gray-50 border-gray-200"

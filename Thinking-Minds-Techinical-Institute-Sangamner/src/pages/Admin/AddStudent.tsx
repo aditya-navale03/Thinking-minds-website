@@ -8,7 +8,10 @@ import { Button } from "../../components/ui/button";
 import SuccessScreen from "../../components/ui/SuccessScreen";
 import { courses } from "../../data/courses";
 import BackButton from "../../components/ui/backbutton";
+import { query, where, getDocs } from "firebase/firestore";
 
+
+import { migrateStudents } from "../../utils/migrateStudents";//temp
 
 //imports for invoice template generator
 import html2canvas from "html2canvas"
@@ -47,13 +50,28 @@ interface FormErrors {
   aadhar?: string;
 }
 
+interface InvoiceData {
+  studentName: string;
+  email: string;
+  mobile: string;
+  course: string;
+  admissionNo: string;
+  totalFee: number;
+  feesPaid: number;
+  remainingFee: number;
+  receiptNo: string;
+  date: string;
+  paymentMode: string;
+}
+
 export default function AddStudent() {
 
 
   // invoice
   const invoiceRef = useRef<HTMLDivElement>(null)
-  const [invoiceData, setInvoiceData] = useState<any>(null)
 
+
+const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null)
 
   //payment mode
   const [paymentMode, setPaymentMode] = useState<"Cash" | "Online">("Cash");
@@ -252,30 +270,28 @@ const receiptNo = await generateReceiptNumber(dept);
 
     //the sample code for uploading to firebase section wise
 
-const studentRef = doc(
-  db,
-  "students",
-  department.toLowerCase(),
-  "students",
-  email.toLowerCase()
+
+const q = query(
+  collection(db, "students"),
+  where("email", "==", email.toLowerCase())
 );
 
-// 🔍 Duplicate email check
-const existing = await getDoc(studentRef);
+const existing = await getDocs(q);
 
-if (existing.exists()) {
+if (!existing.empty) {
   setLoading(false);
   alert("Email already exists ❌");
   return;
 }
 
 // ✅ Save student as document
-await setDoc(studentRef, {
+await addDoc(collection(db, "students"), {
   rollNo: finalRollNo,
   fullName,
   dob,
   email: email.toLowerCase(),
   course: course.toUpperCase(),
+  department: department.toUpperCase(),
   aadhar: aadhar.replace(/\D/g, ""),
   mobile,
   totalFee: feeValue,
@@ -287,27 +303,6 @@ await setDoc(studentRef, {
   photoURL: ""
 });
 
-
-
-  // // ---------------- SAVE TO FIRESTORE ----------------
-  // await addDoc(collection(db, "students"), {
-  //   id: Date.now(),
-  //   rollNo: finalRollNo,
-  //   fullName: fullName,
-  //   dob,
-  //   email: email.toLowerCase(),
-  //   course: course.toUpperCase(),
-  //   department,
-  //   aadhar: aadhar.replace(/\D/g, ""),
-  //   mobile,
-  //   totalFee: feeValue,
-  //   firstInstallment: firstInstall,
-  //   remainingFee: feeValue - firstInstall < 0 ? 0 : feeValue - firstInstall,
-  //   feePaid: firstInstall,
-  //   photoURL: "", //photoURL,
-  // });
-
-  console.log("Student saved successfully!");
 
   // ❌ remove alert and navigate
   // ❌ remove page redirect
@@ -346,8 +341,8 @@ generateAndSendInvoice(invoicePayload)
 
 
 //invoice
-const generateAndSendInvoice = async (student: any) => {
-  setInvoiceData(student)
+const generateAndSendInvoice = async (student: InvoiceData) => {
+    setInvoiceData(student)
 
   setTimeout(async () => {
     if (!invoiceRef.current) {
@@ -467,6 +462,10 @@ THINKING MINDS TECHNICAL TRAINING INSTITUTE
             className="w-full border px-3 py-2 rounded"
           />
         </div>
+
+        {/* <Button onClick={migrateStudents}>
+  Migrate Data
+</Button> */}
 
         <div>
           {errors.middleName && (

@@ -3,10 +3,14 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import { useLocation } from "react-router-dom";
 
+import { query, where } from "firebase/firestore";
+
+
 interface Student {
     fullName?: string;
     mobile?: string;
     remainingFee?: number;
+    department?: string;
 }
 
 export default function Reminders() {
@@ -18,9 +22,13 @@ export default function Reminders() {
 
     useEffect(() => {
         const fetchStudents = async () => {
-            const snapshot = await getDocs(
-                collection(db, "students", department, "students")
-            );
+
+const q = query(
+  collection(db, "students"),
+  where("department", "==", department?.toUpperCase())
+);
+
+const snapshot = await getDocs(q);
 
             const list: Student[] = [];
 

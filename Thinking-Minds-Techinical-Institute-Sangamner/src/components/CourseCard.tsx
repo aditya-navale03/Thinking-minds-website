@@ -1,19 +1,28 @@
 import { motion } from "framer-motion";
-import { Clock, DollarSign, ChevronDown } from "lucide-react";
+import { Clock } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { Course } from "../data/courses";
+import { Course, courses } from "../data/courses";
 
 interface CourseCardProps {
   course: Course;
   index: number;
   onOpenModal: (course: Course) => void;
 }
-
 const CourseCard = ({ course, index, onOpenModal }: CourseCardProps) => {
+
   const handleEnroll = () => {
     const msg = `Hello! I would like to enroll in the ${course.name} course.`;
-    const wa = `https://wa.me/8459769802?text=${encodeURIComponent(msg)}`;
+
+    const phoneMap: Record<string, string> = {
+      IT: "9552495373",
+      CIVIL: "8412978749",
+    };
+
+    const phoneNumber =
+      phoneMap[course.category.toUpperCase()] || "8459769802";
+
+    const wa = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(msg)}`;
     window.open(wa, "_blank");
   };
 
@@ -23,8 +32,7 @@ const CourseCard = ({ course, index, onOpenModal }: CourseCardProps) => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true }}
-    >
-      <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2">
+    >      <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2">
         <CardHeader>
           <div className="flex items-start justify-between">
             <div>
@@ -50,8 +58,8 @@ const CourseCard = ({ course, index, onOpenModal }: CourseCardProps) => {
             </div>
 
             <div className="flex items-center gap-2 text-sm">
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-              <span className="font-medium">{course.fees}</span>
+              {/* <DollarSign className="h-4 w-4 text-muted-foreground" /> */}
+              {/* <span className="font-medium">{course.fees}</span> */}
             </div>
           </div>
 

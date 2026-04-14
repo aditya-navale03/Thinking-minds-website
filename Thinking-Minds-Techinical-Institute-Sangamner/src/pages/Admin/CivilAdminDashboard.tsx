@@ -61,12 +61,11 @@ export default function CivilAdminDashboard() {
 
           {/* View Civil Students */}
           <Button
-          disabled
             className="w-full py-3 text-base flex items-center justify-center gap-3
                        bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl shadow-sm"
             onClick={() => navigate("/admin/students/civil")}
           >
-            <Users size={20} /> View Civil Students(Under Maintainance)
+            <Users size={20} /> View Civil Students
           </Button>
 
           {/* Remove Student */}

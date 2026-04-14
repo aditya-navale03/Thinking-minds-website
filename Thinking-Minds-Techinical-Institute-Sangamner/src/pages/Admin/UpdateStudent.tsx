@@ -18,11 +18,34 @@ export default function UpdateStudent() {
 
   const navigate = useNavigate();
 
-  const [student, setStudent] = useState<any>(null);
+  type Student = {
+  fullName: string;
+  email: string;
+  mobile: string;
+  aadhar: string;
+  dob: string;
+  course: string;
+  totalFee: number;
+  firstInstallment: number;
+  remainingFee: number;
+  paymentMode: string;
+  photoURL?: string;
+};
 
+const [student, setStudent] = useState<Student | null>(null);
 
-  const [invoiceData, setInvoiceData] = useState<any>(null);
-
+type InvoiceData = {
+  studentName: string;
+  course: string;
+  mobile: string;
+  paymentMode: string;
+  date: string;
+  installmentPaid: number;
+  totalPaid: number;
+  totalFee: number;
+  remainingFee: number;
+};
+const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
   // Editable fields
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -53,13 +76,7 @@ export default function UpdateStudent() {
         return;
       }
 
-      const ref = doc(
-        db,
-        "students",
-        dept,
-        "students",
-        docId
-      );
+     const ref = doc(db, "students", docId);
 
       const snap = await getDoc(ref);
 
@@ -69,8 +86,7 @@ export default function UpdateStudent() {
         return;
       }
 
-      const s = snap.data();
-
+const s = snap.data() as Student;
       setStudent(s);
 
       setFullName(s.fullName);
@@ -107,14 +123,7 @@ export default function UpdateStudent() {
 
 
 
-    const ref = doc(
-      db,
-      "students",
-      dept,
-      "students",
-      docId
-    );
-
+   const ref = doc(db, "students", docId);
     const installmentAmount =
       Number(nextInstallment || 0);
 
