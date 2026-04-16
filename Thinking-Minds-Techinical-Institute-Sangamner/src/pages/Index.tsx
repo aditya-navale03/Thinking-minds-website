@@ -22,7 +22,6 @@ const Index = () => {
           onClick={() => navigate("/student-verification")}
           className="px-8 py-6 text-lg rounded-xl bg-blue-600 text-white hover:bg-blue-700"
         >
-          <h1>hello world</h1>
           Student Verification
         </Button>
 
