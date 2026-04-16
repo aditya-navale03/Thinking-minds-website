@@ -5,6 +5,8 @@ import PopupModal from "../../components/ui/removeStudent";
 import { db } from "../../firebase/firebaseConfig";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
+import { useNavigate } from "react-router-dom";
+
 export default function RemoveStudent() {
   const [search, setSearch] = useState("");
   const [students, setStudents] = useState([]);

@@ -5,6 +5,8 @@ import { auth } from "../../firebase/firebaseConfig";
 import { Button } from "../../components/ui/button";
 import { UserPlus, UserMinus, LogOut, Users } from "lucide-react";
 
+import BackButton from "../../components/ui/backbutton";
+
 // dashboard
 import { LayoutDashboard } from "lucide-react";
 
@@ -22,6 +24,9 @@ export default function ITAdminDashboard() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6">
 
+        {/* HEADER */}
+    {/* Back Button */}
+    <BackButton />
         <h1 className="text-xl font-semibold text-center mb-6 text-gray-800">
           IT Admin Dashboard
         </h1>

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebaseConfig";
 import { Bell } from "lucide-react";
+import BackButton from "../../components/ui/backbutton";
 
 
 // dashboard
@@ -40,8 +41,14 @@ export default function CivilAdminDashboard() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6">
+<div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6">
 
+  {/* HEADER */}
+  <div className="flex items-center justify-between mb-4">
+
+    {/* Back Button */}
+    <BackButton />
+  </div>
         <h1 className="text-xl font-semibold text-center mb-6 text-gray-800">
           Civil Admin Dashboard
         </h1>

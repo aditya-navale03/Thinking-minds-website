@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { collection, getDocs, QueryDocumentSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import { useLocation } from "react-router-dom";
+import { query, where } from "firebase/firestore";
+
 
 interface Student {
   totalFee?: number;
@@ -28,9 +30,12 @@ export default function Dashboard() {
       let remainingSum = 0;
 
 
-      const snapshot = await getDocs(
-        collection(db, "students", department, "students")
-      );
+const q = query(
+  collection(db, "students"),
+  where("department", "==", department?.toUpperCase())
+);
+
+const snapshot = await getDocs(q);
 
       snapshot.forEach((studentDoc: QueryDocumentSnapshot) => {
         const data = studentDoc.data() as Student;

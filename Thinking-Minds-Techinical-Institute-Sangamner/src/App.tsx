@@ -102,7 +102,7 @@ const App = () => (
 
 
           {/* Update student needs ID */}
-<Route path="/admin/update-student/:dept/:id" element={<UpdateStudent />} />          {/* 404 */}
+<Route path="/admin/update-student/:id" element={<UpdateStudent />} />
           <Route path="*" element={<NotFound />} />
         
 
