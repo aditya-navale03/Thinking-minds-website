@@ -198,9 +198,26 @@ const generatePDF = async () => {
     pdfHeight
   );
 
-  pdf.save(
-    `installment-${fullName}.pdf`
-  );
+  const fileName = `installment-${fullName}.pdf`;
+pdf.save(fileName);
+
+// 🔥 WhatsApp message
+const message = `Hello ${fullName},
+
+Your installment payment receipt has been generated.
+
+Amount Paid: ₹${invoiceData?.installmentPaid}
+Remaining Fee: ₹${invoiceData?.remainingFee}
+
+Please find your receipt attached.
+
+- Thinking Minds Institute`;
+
+const phone = `91${mobile}`; // India code
+
+const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+window.open(url, "_blank");
 };
 
 useEffect(() => {

@@ -49,8 +49,8 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-     
-     {/* snowfall
+
+      {/* snowfall
       <Snowfall
   snowflakeCount={200}
   style={{
@@ -64,7 +64,7 @@ const App = () => (
 
 
 
-{/* <IndiaBuildsIntro />
+      {/* <IndiaBuildsIntro />
 <TricolorConfetti show={true} /> */}
 
 
@@ -88,7 +88,7 @@ const App = () => (
           <Route path="/admin/dashboard-it" element={<ITDashboard />} />
 
           {/* View students department-wise */}
-          <Route path="/admin/students/:dept" element={<ViewStudents />} /> 
+          <Route path="/admin/students/:dept" element={<ViewStudents />} />
 
           {/* Student Actions */}
           <Route path="/admin/add-student" element={<AddStudent />} />
@@ -97,27 +97,27 @@ const App = () => (
           {/* dashboard route */}
           <Route path="/admin/dashboard" element={<Dashboard />} />
 
-        {/* reminder */}
-        <Route path="/admin/reminders" element={<Reminders />} />
+          {/* reminder */}
+          <Route path="/admin/reminders" element={<Reminders />} />
 
 
           {/* Update student needs ID */}
-<Route path="/admin/update-student/:id" element={<UpdateStudent />} />
+          <Route path="/admin/update-student/:dept/:id" element={<UpdateStudent />} />
           <Route path="*" element={<NotFound />} />
-        
 
-        <Route
-  path="/migrate-students"
-  element={<MigrateStudents />}
-/>
 
-        
+          <Route
+            path="/migrate-students"
+            element={<MigrateStudents />}
+          />
+
+
         </Routes>
 
 
 
 
-            
+
 
 
       </BrowserRouter>
@@ -127,7 +127,7 @@ const App = () => (
   </QueryClientProvider>
 
 
-  
+
 );
 
 
