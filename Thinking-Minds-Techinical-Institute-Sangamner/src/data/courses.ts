@@ -503,4 +503,153 @@ export const courses: Course[] = [
   ]
 },
 
+//new courses
+,
+{
+  id: "etabs",
+  name: "ETABS",
+  category: "Civil",
+  duration: "2 Months",
+  description: "Structural analysis and design training using ETABS software.",
+  syllabus: [
+    "ETABS Interface",
+    "Building Modeling",
+    "Load Assignments",
+    "Structural Analysis",
+    "Beam & Column Design",
+    "Slab Design",
+    "Seismic Analysis",
+    "Wind Load Analysis",
+    "Report Generation"
+  ],
+  projects: [
+    "G+5 Building Design",
+    "Residential Structure Analysis",
+    "Commercial Building Model"
+  ],
+  certifications: [
+    "ETABS Professional Certificate"
+  ],
+  careerOpportunities: [
+    "Structural Engineer",
+    "Design Engineer",
+    "ETABS Modeler",
+    "Structural Consultant"
+  ]
+},
+
+{
+  id: "internship-2-months",
+  name: "Internship (2 Months)",
+  category: "Civil",
+  duration: "2 Months",
+  description: "Practical industry internship with real project exposure.",
+  syllabus: [
+    "Site Visits",
+    "Project Documentation",
+    "Drawing Reading",
+    "Material Testing",
+    "Quality Control",
+    "Project Coordination"
+  ],
+  projects: [
+    "Live Site Project",
+    "Project Report Submission"
+  ],
+  certifications: [
+    "Internship Completion Certificate"
+  ],
+  careerOpportunities: [
+    "Site Engineer",
+    "Project Coordinator",
+    "Junior Civil Engineer"
+  ]
+},
+
+{
+  id: "internship-3-months",
+  name: "Internship (3 Months)",
+  category: "Civil",
+  duration: "3 Months",
+  description: "Extended industry internship with advanced project involvement.",
+  syllabus: [
+    "Site Supervision",
+    "Construction Management",
+    "BOQ Preparation",
+    "Quality Assurance",
+    "Project Planning",
+    "Reporting & Documentation"
+  ],
+  projects: [
+    "Live Construction Project",
+    "Internship Report"
+  ],
+  certifications: [
+    "Industrial Internship Certificate"
+  ],
+  careerOpportunities: [
+    "Site Engineer",
+    "Planning Engineer",
+    "Project Engineer"
+  ]
+},
+
+{
+  id: "msp",
+  name: "Microsoft Project (MSP)",
+  category: "Civil",
+  duration: "2 Months",
+  description: "Learn project planning, scheduling, and resource management using Microsoft Project.",
+  syllabus: [
+    "MS Project Interface",
+    "Project Planning",
+    "Task Scheduling",
+    "Resource Allocation",
+    "Gantt Charts",
+    "Critical Path Method",
+    "Project Tracking",
+    "Reporting"
+  ],
+  projects: [
+    "Construction Schedule",
+    "Project Planning Dashboard"
+  ],
+  certifications: [
+    "MS Project Certificate"
+  ],
+  careerOpportunities: [
+    "Planning Engineer",
+    "Project Coordinator",
+    "Project Scheduler"
+  ]
+},
+
+{
+  id: "interview-preparation",
+  name: "Interview Preparation",
+  category: "Civil",
+  duration: "ALL",
+  description: "Prepare for technical and HR interviews with mock sessions and aptitude training.",
+  syllabus: [
+    "Resume Building",
+    "Technical Questions",
+    "HR Interview Questions",
+    "Communication Skills",
+    "Group Discussion",
+    "Mock Interviews"
+  ],
+  projects: [
+    "Mock Interview Assessment",
+    "Professional Resume Creation"
+  ],
+  certifications: [
+    "Interview Preparation Certificate"
+  ],
+  careerOpportunities: [
+    "Job Readiness",
+    "Campus Placement Preparation",
+    "Professional Development"
+  ]
+}
+
 ];
