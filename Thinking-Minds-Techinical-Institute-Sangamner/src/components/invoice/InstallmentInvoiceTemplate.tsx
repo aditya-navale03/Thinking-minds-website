@@ -6,7 +6,7 @@ const InstallmentInvoiceTemplate = ({ data }) => {
 
       <div className="flex justify-between mb-4">
         <div>
-          <h2 className="font-bold text-base">Thinking Minds Techinical Training Instutute, Sangamner</h2> <br /><br />
+          <h2 className="font-bold text-base">Thinking Minds Techinical Training Institute, Sangamner</h2> <br /><br />
           <p>opposite Amrutvahini College, Sangamner,</p>
           <p>Ghulewadi</p>
           <p>Maharashtra 422608</p>

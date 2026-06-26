@@ -6,6 +6,7 @@ import { Bell } from "lucide-react";
 import BackButton from "../../components/ui/backbutton";
 
 
+
 // dashboard
 import { LayoutDashboard } from "lucide-react";
 
@@ -40,8 +41,7 @@ export default function CivilAdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-<div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6">
+<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 px-4"><div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6">
 
   {/* HEADER */}
   <div className="flex items-center justify-between mb-4">
@@ -75,6 +75,7 @@ export default function CivilAdminDashboard() {
             <Users size={20} /> View Civil Students
           </Button>
 
+         
           {/* Remove Student */}
           <Button
             className="w-full py-3 text-base flex items-center justify-center gap-3
