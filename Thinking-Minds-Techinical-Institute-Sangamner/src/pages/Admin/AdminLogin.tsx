@@ -65,30 +65,40 @@ function AdminLogin() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-10 w-full max-w-md">
+<div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 px-4">     
+<div className="w-full max-w-md rounded-3xl border border-slate-700 bg-slate-900/80 backdrop-blur-xl shadow-2xl p-8">
+        <BackButton className="mb-6" />
+<div className="text-center mb-8">
 
-        <BackButton className="mb-4" />
+    <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 flex items-center justify-center text-2xl font-bold text-white shadow-lg">
+        TM
+    </div>
 
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
-          Admin Login
-        </h2>
+    <h2 className="text-3xl font-bold text-white mt-5">
+        Welcome Back
+    </h2>
 
-        <form onSubmit={loginAdmin} className="space-y-4">
+    <p className="text-slate-400 mt-2">
+        Sign in to your admin account
+    </p>
+
+</div>
+
+        <form onSubmit={loginAdmin} className="space-y-5">
           <div>
-            <label className="block text-gray-700 mb-1">Email</label>
+            <label className="block text-slate-300 mb-2 font-medium">Email</label>
             <input
               type="email"
               placeholder="Enter admin email"
               value={email}
               onChange={(e) => setEmail(e.currentTarget.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+             className="w-full h-12 rounded-xl border border-slate-700 bg-slate-800 text-white placeholder:text-slate-500 px-4 focus:outline-none focus:ring-2 focus:ring-violet-500"
               required
             />
           </div>
 
           <div>
-  <label className="block text-gray-700 mb-1">Password</label>
+  <label className="block text-slate-300 mb-2 font-medium"></label><label className="block text-gray-700 mb-1">Password</label>
 
   <div className="relative">
     <input
@@ -96,14 +106,14 @@ function AdminLogin() {
       placeholder="Enter password"
       value={password}
       onChange={(e) => setPassword(e.currentTarget.value)}
-      className="w-full px-4 py-2 border rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    className="w-full h-12 rounded-xl border border-slate-700 bg-slate-800 text-white placeholder:text-slate-500 px-4 pr-12 focus:outline-none focus:ring-2 focus:ring-violet-500"
       required
     />
 
     <button
   type="button"
   onClick={() => setShowPassword(!showPassword)}
-  className="absolute right-3 top-2 text-gray-600"
+  className="absolute right-4 top-3 text-slate-400 hover:text-white transition"
 >
   {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
   </button>
@@ -113,15 +123,32 @@ function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-colors duration-200"
-          >
+className="
+w-full
+h-12
+rounded-xl
+bg-gradient-to-r
+from-violet-600
+to-blue-600
+hover:from-violet-500
+hover:to-blue-500
+text-white
+font-semibold
+shadow-lg
+transition-all
+duration-300
+hover:scale-[1.02]
+"          >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-gray-500 text-sm">
-          Powered by <span className="font-semibold">Thinking Minds</span>
-        </p>
+        <p className="mt-8 text-center text-slate-500 text-sm">
+    Powered by
+    <span className="text-violet-400 font-semibold">
+        {" "}Thinking Minds
+    </span>
+</p>
       </div>
     </div>
   );
