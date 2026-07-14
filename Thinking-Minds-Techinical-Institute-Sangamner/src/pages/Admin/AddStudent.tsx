@@ -71,16 +71,15 @@ export default function AddStudent() {
   const invoiceRef = useRef<HTMLDivElement>(null)
 
 
-const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null)
+  const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null)
 
   //payment mode
   const [paymentMode, setPaymentMode] = useState<"Cash" | "Online">("Cash");
 
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const department = location.state?.dept || "";
-
+const department =
+  (localStorage.getItem("admin_department") || "").toUpperCase();
   // ---------------- STATES ----------------
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
@@ -108,7 +107,7 @@ const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null)
   const [showDropdown, setShowDropdown] = useState(false);
 
 
-  
+
   // ---------------- HELPERS ----------------
   const formatIndianNumber = (num: string) => {
     const s = String(num || "").replace(/\D/g, "");
@@ -121,10 +120,12 @@ const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null)
     return `${other},${last3}`;
   };
 
-//course option
-const courseOptions = courses
-  .filter((c) => c.category.toLowerCase() === department.toLowerCase())
-  .map((c) => c.name.toUpperCase());
+  //course option
+  const courseOptions = courses
+    .filter((c) => c.category.toLowerCase() === department.toLowerCase())
+    .map((c) => c.name.toUpperCase());
+    console.log("Department:", department);
+console.log("Course Options:", courseOptions);
 
 
   const updateRemainingFee = (total: string, first: string) => {
@@ -136,27 +137,27 @@ const courseOptions = courses
 
     setRemainingFee(formatIndianNumber(String(remaining)));
   };
-const [filteredCourses, setFilteredCourses] = useState<string[]>(courseOptions);
+  const [filteredCourses, setFilteredCourses] = useState<string[]>(courseOptions);
 
   const getAadhar4 = (aad: string) => aad.replace(/\D/g, "").slice(0, 4);
 
   const generateRollNoValue = (f: string, aad: string, l: string, dept?: string) => {
-  const first = f.trim().charAt(0)?.toUpperCase() || "";
-  const last = l.trim().charAt(0)?.toUpperCase() || "";
-  const aad4 = getAadhar4(aad);
+    const first = f.trim().charAt(0)?.toUpperCase() || "";
+    const last = l.trim().charAt(0)?.toUpperCase() || "";
+    const aad4 = getAadhar4(aad);
 
-  if (!(first && last && aad4.length === 4)) return "";
+    if (!(first && last && aad4.length === 4)) return "";
 
-  let prefix = "";
-  if (dept?.toLowerCase() === "it") prefix = "IT/";
-  else if (dept?.toLowerCase() === "civil") prefix = "CIVIL/";
+    let prefix = "";
+    if (dept?.toLowerCase() === "it") prefix = "IT/";
+    else if (dept?.toLowerCase() === "civil") prefix = "CIVIL/";
 
-  return `${prefix}${first}${aad4}${last}`;
-};
+    return `${prefix}${first}${aad4}${last}`;
+  };
 
   const updateRollNo = (f: string, aad: string, l: string) => {
-  setRollNo(generateRollNoValue(f, aad, l, department));
-};
+    setRollNo(generateRollNoValue(f, aad, l, department));
+  };
 
   // ---------------- IMAGE HANDLING ----------------
   const handlePhoto = (file: File | null) => {
@@ -206,20 +207,20 @@ const [filteredCourses, setFilteredCourses] = useState<string[]>(courseOptions);
     if (!lastName.trim()) temp.lastName = "Last name required";
 
     if (!dob.trim()) temp.dob = "DOB required";
-// EMAIL VALIDATION
-if (!email.trim()) {
-  temp.email = "Email required";
-} else {
-  if (email !== email.toLowerCase()) {
-    temp.email = "Email must be lowercase";
-  }
+    // EMAIL VALIDATION
+    if (!email.trim()) {
+      temp.email = "Email required";
+    } else {
+      if (email !== email.toLowerCase()) {
+        temp.email = "Email must be lowercase";
+      }
 
-  const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+      const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
 
-  if (!emailRegex.test(email)) {
-    temp.email = "Invalid email format";
-  }
-}
+      if (!emailRegex.test(email)) {
+        temp.email = "Invalid email format";
+      }
+    }
     if (!course.trim()) temp.course = "Course required";
     if (!totalFee.trim()) temp.totalFee = "Total fee required";
 
@@ -239,159 +240,159 @@ if (!email.trim()) {
   };
 
   // ---------------- SUBMIT ----------------
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  // ✔ Stop here if validation fails
-  if (!validate()) return;
+    // ✔ Stop here if validation fails
+    if (!validate()) return;
 
-  setLoading(true);
+    setLoading(true);
 
-  console.log("VALIDATION PASSED");
-  console.log("START SUBMIT");
+    console.log("VALIDATION PASSED");
+    console.log("START SUBMIT");
 
-  // ---------------- COMPUTE VALUES ----------------
-  const feeValue = Number(totalFee.replace(/,/g, "") || 0);
-  const firstInstall = Number(firstInstallment.replace(/,/g, "") || 0);
+    // ---------------- COMPUTE VALUES ----------------
+    const feeValue = Number(totalFee.replace(/,/g, "") || 0);
+    const firstInstall = Number(firstInstallment.replace(/,/g, "") || 0);
 
-  const fullName = `${firstName} ${middleName} ${lastName}`
-    .replace(/\s+/g, " ")
-    .trim()
-    .toUpperCase();
+    const fullName = `${firstName} ${middleName} ${lastName}`
+      .replace(/\s+/g, " ")
+      .trim()
+      .toUpperCase();
 
-  const finalRollNo =
-    rollNo || generateRollNoValue(firstName, aadhar, lastName, department);
+    const finalRollNo =
+      rollNo || generateRollNoValue(firstName, aadhar, lastName, department);
 
-// 🔢 Generate Receipt Number
-const dept =
-  department.toUpperCase().includes("IT") ? "IT" : "CIVIL";
+    // 🔢 Generate Receipt Number
+    const dept =
+      department.toUpperCase().includes("IT") ? "IT" : "CIVIL";
 
-const receiptNo = await generateReceiptNumber(dept);
+    const receiptNo = await generateReceiptNumber(dept);
 
     //the sample code for uploading to firebase section wise
 
 
-const q = query(
-  collection(db, "students"),
-  where("email", "==", email.toLowerCase())
-);
+    const q = query(
+      collection(db, "students"),
+      where("email", "==", email.toLowerCase())
+    );
 
-const existing = await getDocs(q);
+    const existing = await getDocs(q);
 
-if (!existing.empty) {
-  setLoading(false);
-  alert("Email already exists ❌");
-  return;
-}
+    if (!existing.empty) {
+      setLoading(false);
+      alert("Email already exists ❌");
+      return;
+    }
 
-// ✅ Save student as document
-await addDoc(collection(db, "students"), {
-  rollNo: finalRollNo,
-  fullName,
-  dob,
-  email: email.toLowerCase(),
-  course: course.toUpperCase(),
-  department: department.toUpperCase(),
-  aadhar: aadhar.replace(/\D/g, ""),
-  mobile,
-  totalFee: feeValue,
-  firstInstallment: firstInstall,
-  remainingFee: Math.max(0, feeValue - firstInstall),
-  feePaid: firstInstall,
-  paymentMode,
-  receiptNo,
-  photoURL: ""
-});
+    // ✅ Save student as document
+    await addDoc(collection(db, "students"), {
+      rollNo: finalRollNo,
+      fullName,
+      dob,
+      email: email.toLowerCase(),
+      course: course.toUpperCase(),
+      department: department.toUpperCase(),
+      aadhar: aadhar.replace(/\D/g, ""),
+      mobile,
+      totalFee: feeValue,
+      firstInstallment: firstInstall,
+      remainingFee: Math.max(0, feeValue - firstInstall),
+      feePaid: firstInstall,
+      paymentMode,
+      receiptNo,
+      photoURL: ""
+    });
 
 
-  // ❌ remove alert and navigate
-  // ❌ remove page redirect
+    // ❌ remove alert and navigate
+    // ❌ remove page redirect
+
+
+    //invoice
+    const invoicePayload = {
+      studentName: fullName,
+      email,
+      mobile,
+      course,
+      admissionNo: finalRollNo,
+      totalFee: feeValue,
+      feesPaid: firstInstall,
+      remainingFee: feeValue - firstInstall,
+      receiptNo,
+      date: new Date().toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }),
+
+      paymentMode
+    }
+
+
+
+    generateAndSendInvoice(invoicePayload)
+
+
+    // ✔ show success popup
+    setShowSuccess(true);
+
+    setLoading(false);
+  };
 
 
   //invoice
- const invoicePayload = {
-  studentName: fullName,
-  email,
-  mobile,
-  course,
-  admissionNo: finalRollNo,
-  totalFee: feeValue,
-  feesPaid: firstInstall,
-  remainingFee: feeValue - firstInstall,
-  receiptNo,
-  date: new Date().toLocaleDateString("en-GB", {
-  day: "2-digit",
-  month: "short",
-  year: "numeric"
-}),
-
-  paymentMode
-}
-
-
-
-generateAndSendInvoice(invoicePayload)
-
-
-  // ✔ show success popup
-  setShowSuccess(true);
-
-  setLoading(false);
-};
-
-
-//invoice
-const generateAndSendInvoice = async (student: InvoiceData) => {
+  const generateAndSendInvoice = async (student: InvoiceData) => {
     setInvoiceData(student)
 
-  setTimeout(async () => {
-    if (!invoiceRef.current) {
-      alert("Invoice not ready")
-      return
-    }
+    setTimeout(async () => {
+      if (!invoiceRef.current) {
+        alert("Invoice not ready")
+        return
+      }
 
-    try {
-      const images = invoiceRef.current.querySelectorAll("img")
-      await Promise.all(
-        Array.from(images).map(
-          img =>
-            img.complete
-              ? Promise.resolve()
-              : new Promise(resolve => {
+      try {
+        const images = invoiceRef.current.querySelectorAll("img")
+        await Promise.all(
+          Array.from(images).map(
+            img =>
+              img.complete
+                ? Promise.resolve()
+                : new Promise(resolve => {
                   img.onload = resolve
                   img.onerror = resolve
                 })
+          )
         )
-      )
-const canvas = await html2canvas(
-  invoiceRef.current!,
-  {
-    scale: 2,
-    useCORS: true
-  }
-)
+        const canvas = await html2canvas(
+          invoiceRef.current!,
+          {
+            scale: 2,
+            useCORS: true
+          }
+        )
 
-const imgData = canvas.toDataURL("image/png")
+        const imgData = canvas.toDataURL("image/png")
 
-const pdf = new jsPDF("p", "mm", "a4")
+        const pdf = new jsPDF("p", "mm", "a4")
 
-const pdfWidth = pdf.internal.pageSize.getWidth()
-const pdfHeight =
-  (canvas.height * pdfWidth) / canvas.width
+        const pdfWidth = pdf.internal.pageSize.getWidth()
+        const pdfHeight =
+          (canvas.height * pdfWidth) / canvas.width
 
-pdf.addImage(
-  imgData,
-  "PNG",
-  0,
-  0,
-  pdfWidth,
-  pdfHeight
-)
+        pdf.addImage(
+          imgData,
+          "PNG",
+          0,
+          0,
+          pdfWidth,
+          pdfHeight
+        )
 
-pdf.save(`receipt-${student.studentName}.pdf`)
+        pdf.save(`receipt-${student.studentName}.pdf`)
 
 
-      const msg = `
+        const msg = `
 Dear ${student.studentName},
 
 Congrats! 🎉 Your enrollment is successfully completed at
@@ -408,162 +409,270 @@ Thanks & Regards,
 THINKING MINDS TECHNICAL TRAINING INSTITUTE
 `
 
-      window.open(
-        `https://wa.me/91${student.mobile}?text=${encodeURIComponent(msg)}`,
-        "_blank"
-      )
-    } catch (err) {
-      console.error("IMAGE ERROR:", err)
-      alert("Invoice image generation failed")
-    }
-  }, 800)
-}
+        window.open(
+          `https://wa.me/91${student.mobile}?text=${encodeURIComponent(msg)}`,
+          "_blank"
+        )
+      } catch (err) {
+        console.error("IMAGE ERROR:", err)
+        alert("Invoice image generation failed")
+      }
+    }, 800)
+  }
 
 
 
   // ---------------- UI ----------------
   return (
-    <div className="min-h-screen bg-gray-100 px-3 py-6 md:px-6">
-      
-      <div className="max-w-6xl mx-auto mb-3">
-  <BackButton />
-</div>
+    <div className="min-h-screen bg-slate-950">
 
-      
-      <h1 className="text-2xl md:text-3xl font-bold text-center mb-6">
-        Add Student ({department.toUpperCase()})
-      </h1>
+      <div className="max-w-7xl mx-auto px-6 py-8">
 
-      <form
-        onSubmit={handleSubmit}
-        className="
-          max-w-6xl mx-auto 
-          grid grid-cols-1 
-          sm:grid-cols-2 
-          lg:grid-cols-3 
-          gap-4 p-4 bg-white shadow rounded-xl
-        "
-      >
-        {/* BASIC FIELDS */}
-        <div>
-          {errors.firstName && (
-            <p className="text-red-600 text-sm">{errors.firstName}</p>
-          )}
-          <label>First Name</label>
-          <input
-            value={firstName}
-            onChange={(e) => {
-              const v = e.target.value;
-              if (/^[A-Za-z ]*$/.test(v)) {
-                setFirstName(v.toUpperCase());
-                updateRollNo(v, aadhar, lastName);
-              }
-            }}
-            className="w-full border px-3 py-2 rounded"
-          />
+        {/* Header */}
+
+        <div className="mb-8">
+
+          <h1 className="text-4xl font-bold text-white">
+            Add Student
+          </h1>
+
+          <p className="text-slate-400 mt-2">
+            Register a new student into Thinking Minds.
+          </p>
+
         </div>
 
-        {/* <Button onClick={migrateStudents}>
+        {/* Your existing form starts here */}
+
+
+
+        <form
+          onSubmit={handleSubmit}
+          className="
+overflow-visible
+max-w-7xl
+mx-auto
+bg-slate-900
+border
+border-slate-800
+rounded-2xl
+p-8
+shadow-2xl
+grid
+grid-cols-1
+md:grid-cols-2
+xl:grid-cols-3
+gap-6
+"
+        >
+          {/* BASIC FIELDS */}
+          <div>
+            {errors.firstName && (
+              <p className="text-red-400 text-sm mt-1">{errors.firstName}</p>
+            )}
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              First Name
+            </label>          <input
+              value={firstName}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (/^[A-Za-z ]*$/.test(v)) {
+                  setFirstName(v.toUpperCase());
+                  updateRollNo(v, aadhar, lastName);
+                }
+              }}
+              className="
+w-full
+bg-slate-800
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-white
+placeholder:text-slate-500
+focus:outline-none
+focus:ring-2
+focus:ring-violet-500
+focus:border-violet-500
+transition
+"
+            />
+          </div>
+
+          {/* <Button onClick={migrateStudents}>
   Migrate Data
 </Button> */}
 
-        <div>
-          {errors.middleName && (
-            <p className="text-red-600 text-sm">{errors.middleName}</p>
-          )}
-          <label>Middle Name</label>
-          <input
-            value={middleName}
-            onChange={(e) => {
-              const v = e.target.value;
-              if (/^[A-Za-z ]*$/.test(v)) setMiddleName(v.toUpperCase());
+          <div>
+            {errors.middleName && (
+              <p className="text-red-400 text-sm mt-1">{errors.middleName}</p>
+            )}
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Middle Name
+            </label>          <input
+              value={middleName}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (/^[A-Za-z ]*$/.test(v)) setMiddleName(v.toUpperCase());
 
-            }}
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
+              }}
+              className="
+w-full
+bg-slate-800
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-white
+placeholder:text-slate-500
+focus:outline-none
+focus:ring-2
+focus:ring-violet-500
+focus:border-violet-500
+transition
+"
+            />
+          </div>
 
-        <div>
-          {errors.lastName && (
-            <p className="text-red-600 text-sm">{errors.lastName}</p>
-          )}
-          <label>Last Name</label>
-          <input
-            value={lastName}
-            onChange={(e) => {
-              const v = e.target.value;
-              if (/^[A-Za-z ]*$/.test(v)) {
-                setLastName(v.toUpperCase());
-                updateRollNo(firstName, aadhar, v);
-              }
-            }}
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
-
-
-        {/* ---------------- REST OF YOUR CODE CONTINUES BELOW WITHOUT CHANGE ---------------- */}
-        {/* DOB */}
-        <div>
-          {errors.dob && <p className="text-red-600 text-sm">{errors.dob}</p>}
-          <label>DOB (DD-MM-YYYY)</label>
-          <input
-            value={dob}
-            onChange={(e) => {
-              let input = e.target.value.replace(/[^\d-]/g, "");
-              if (input.length === 2 && dob.length === 1) input += "-";
-              if (input.length === 5 && dob.length === 4) input += "-";
-              if (input.length <= 10) setDob(input);
-            }}
-            placeholder="DD-MM-YYYY"
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
-
-        {/* EMAIL */}
-        <div>
-          {errors.email && (
-            <p className="text-red-600 text-sm">{errors.email}</p>
-          )}
-          <label>Email</label>
-          <input
-            value={email}
-        onChange={(e) => {
-  const value = e.target.value.toLowerCase();
-  setEmail(value);
-
-  // LIVE VALIDATION
-const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|in|org|net|edu|gov)$/;
-
-  setErrors((prev) => ({
-    ...prev,
-    email:
-      !value.trim()
-        ? "Email required"
-        : !emailRegex.test(value)
-        ? "Invalid email format"
-        : undefined
-  }));
-}}
+          <div>
+            {errors.lastName && (
+              <p className="text-red-400 text-sm mt-1">{errors.lastName}</p>
+            )}
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Last Name
+            </label>          <input
+              value={lastName}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (/^[A-Za-z ]*$/.test(v)) {
+                  setLastName(v.toUpperCase());
+                  updateRollNo(firstName, aadhar, v);
+                }
+              }}
+              className="
+w-full
+bg-slate-800
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-white
+placeholder:text-slate-500
+focus:outline-none
+focus:ring-2
+focus:ring-violet-500
+focus:border-violet-500
+transition
+"
+            />
+          </div>
 
 
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
+          {/* ---------------- REST OF YOUR CODE CONTINUES BELOW WITHOUT CHANGE ---------------- */}
+          {/* DOB */}
+          <div>
+            {errors.dob && <p className="text-red-400 text-sm mt-1">{errors.dob}</p>}
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              DOB (DD-MM-YYYY)
+            </label>
+            <input
+              value={dob}
+              onChange={(e) => {
+                let input = e.target.value.replace(/[^\d-]/g, "");
+                if (input.length === 2 && dob.length === 1) input += "-";
+                if (input.length === 5 && dob.length === 4) input += "-";
+                if (input.length <= 10) setDob(input);
+              }}
+              placeholder="DD-MM-YYYY"
+              className="
+w-full
+bg-slate-800
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-white
+placeholder:text-slate-500
+focus:outline-none
+focus:ring-2
+focus:ring-violet-500
+focus:border-violet-500
+transition
+"
+            />
+          </div>
 
-  {/* COURSE */}
-<div className="relative">
+          {/* EMAIL */}
+          <div>
+            {errors.email && (
+              <p className="text-red-400 text-sm mt-1">{errors.email}</p>
+            )}
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Email
+            </label>          <input
+              value={email}
+              onChange={(e) => {
+                const value = e.target.value.toLowerCase();
+                setEmail(value);
+
+                // LIVE VALIDATION
+                const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|in|org|net|edu|gov)$/;
+
+                setErrors((prev) => ({
+                  ...prev,
+                  email:
+                    !value.trim()
+                      ? "Email required"
+                      : !emailRegex.test(value)
+                        ? "Invalid email format"
+                        : undefined
+                }));
+              }}
+
+
+              className="
+w-full
+bg-slate-800
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-white
+placeholder:text-slate-500
+focus:outline-none
+focus:ring-2
+focus:ring-violet-500
+focus:border-violet-500
+transition
+"
+            />
+          </div>
+
+{/* course section */}
+{/* COURSE */}
+<div className="relative z-50">
   {errors.course && (
-    <p className="text-red-600 text-sm mb-1">{errors.course}</p>
+    <p className="text-red-400 text-sm mt-1">
+      {errors.course}
+    </p>
   )}
 
-  <label>Course</label>
+  <label className="block text-sm font-medium text-slate-300 mb-2">
+    Course
+  </label>
 
   <input
     type="text"
     value={course}
     onFocus={() => {
-      setShowDropdown(true);     // 👉 dropdown opens ONLY when clicked
+       console.log("Focused");
+  console.log(courseOptions);
+      setShowDropdown(true);
       setFilteredCourses(courseOptions);
     }}
     onChange={(e) => {
@@ -573,9 +682,9 @@ const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|in|org|net|edu|gov)$/;
       const filtered = courseOptions.filter((c) =>
         c.toLowerCase().includes(v.toLowerCase())
       );
-      setFilteredCourses(filtered);
 
-      setShowDropdown(true);     // 👉 typing also shows dropdown
+      setFilteredCourses(filtered);
+      setShowDropdown(true);
 
       setErrors((prev) => ({
         ...prev,
@@ -588,29 +697,67 @@ const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|in|org|net|edu|gov)$/;
       }));
     }}
     onKeyDown={(e) => {
-  if (e.key === "Enter" && filteredCourses.length === 1) {
-    setCourse(filteredCourses[0]);
-    setFilteredCourses([]);
-    setShowDropdown(false);
-  }
-}}
-
+      if (e.key === "Enter" && filteredCourses.length === 1) {
+        setCourse(filteredCourses[0]);
+        setFilteredCourses([]);
+        setShowDropdown(false);
+      }
+    }}
     placeholder="Type or select a course"
-    className="w-full border px-3 py-2 rounded"
+    className="
+      w-full
+      bg-slate-800
+      border
+      border-slate-700
+      rounded-xl
+      px-4
+      py-3
+      text-white
+      placeholder:text-slate-500
+      focus:outline-none
+      focus:ring-2
+      focus:ring-violet-500
+      focus:border-violet-500
+      transition
+    "
   />
 
-  {/* DROPDOWN */}
   {showDropdown && filteredCourses.length > 0 && (
-    <div className="absolute z-50 w-full border bg-white rounded shadow-md mt-1 max-h-40 overflow-y-auto">
+   <div
+  className="
+        absolute
+        left-0
+        top-full
+        z-[9999]
+        w-full
+        mt-1
+        max-h-56
+        overflow-y-auto
+        rounded-xl
+        border
+        border-slate-700
+        bg-slate-800
+        shadow-2xl
+      "
+    >
       {filteredCourses.map((c) => (
         <div
           key={c}
           onClick={() => {
             setCourse(c);
             setFilteredCourses([]);
-            setShowDropdown(false); // close after selection
+            setShowDropdown(false);
           }}
-          className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+          className="
+            px-4
+            py-3
+            cursor-pointer
+            text-slate-200
+            hover:bg-violet-600
+            hover:text-white
+            transition-all
+            duration-200
+          "
         >
           {c}
         </div>
@@ -619,251 +766,360 @@ const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.(com|in|org|net|edu|gov)$/;
   )}
 </div>
 
-        {/* TOTAL FEE */}
-        <div>
-          {errors.totalFee && (
-            <p className="text-red-600 text-sm">{errors.totalFee}</p>
-          )}
-          <label>Total Fee</label>
-          <input
-            value={totalFee}
-            onChange={(e) => {
-              const raw = e.target.value.replace(/,/g, "");
-              if (!/^\d*$/.test(raw)) return;
-
-              const formatted = formatIndianNumber(raw);
-              setTotalFee(formatted);
-              updateRemainingFee(formatted, firstInstallment);
-
-              if (
-                Number(firstInstallment.replace(/,/g, "")) <= Number(raw)
-              ) {
-                setErrors((prev) => ({
-                  ...prev,
-                  firstInstallment: undefined,
-                }));
-              }
-            }}
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
-
-        {/* AADHAAR */}
-        <div>
-          <label>Aadhaar Number</label>
-          {errors.aadhar && (
-            <p className="text-red-600 text-sm">{errors.aadhar}</p>
-          )}
-          <input
-            value={aadhar.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim()}
-            maxLength={14}
-            onChange={(e) => {
-              const raw = e.target.value.replace(/\D/g, "");
-              if (raw.length <= 12) {
-                setAadhar(raw);
-                updateRollNo(firstName, raw, lastName);
-              }
-            }}
-            className="w-full border px-3 py-2 rounded tracking-wider"
-          />
-        </div>
-
-
-        {/* MOBILE */}
-        <div>
-          <label>Mobile Number</label>
-          {errors.mobile && (
-            <p className="text-red-600 text-sm">{errors.mobile}</p>
-          )}
-          <input
-            value={mobile}
-            maxLength={10}
-            onChange={(e) => {
-              const v = e.target.value;
-              if (/^\d*$/.test(v)) setMobile(v);
-            }}
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
-
-        {/* FIRST INSTALLMENT */}
-        <div>
-          {errors.firstInstallment && (
-            <p className="text-red-600 text-sm">{errors.firstInstallment}</p>
-          )}
-          <label>First Installment</label>
-          <input
-            value={firstInstallment}
-            onChange={(e) => {
-              const raw = e.target.value.replace(/,/g, "");
-              if (!/^\d*$/.test(raw)) return;
-
-              const formatted = formatIndianNumber(raw);
-              setFirstInstallment(formatted);
-              updateRemainingFee(totalFee, formatted);
-
-              const total = Number(totalFee.replace(/,/g, "") || 0);
-              const first = Number(raw || 0);
-
-              if (first > total) {
-                setErrors((prev) => ({
-                  ...prev,
-                  firstInstallment: "Installment cannot exceed Total Fee",
-                }));
-              } else {
-                setErrors((prev) => ({
-                  ...prev,
-                  firstInstallment: undefined,
-                }));
-              }
-            }}
-            className="w-full border px-3 py-2 rounded"
-          />
- </div>
-
-{/* PAYMENT MODE + REMAINING FEE (SIDE BY SIDE) */}
-<div>
-  {errors.paymentMode && (
-    <p className="text-red-600 text-sm">{errors.paymentMode}</p>
-  )}
-  <label>Payment Mode</label>
-  <select
-    value={paymentMode}
-    onChange={(e) =>
-      setPaymentMode(e.target.value as "Cash" | "Online")
-    }
-    className="w-full border px-3 py-2 rounded"
-  >
-    <option value="Cash">Cash</option>
-    <option value="Online">Online</option>
-  </select>
-</div>
-
-<div>
-  <label>Remaining Fee</label>
-  <input
-    value={remainingFee}
-    readOnly
-    className="w-full border px-3 py-2 rounded bg-gray-100"
-  />
-</div>
-
           
+          {/* TOTAL FEE */}
+          <div>
+            {errors.totalFee && (
+              <p className="text-red-400 text-sm mt-1">{errors.totalFee}</p>
+            )}
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Total Fee
+            </label>          <input
+              value={totalFee}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/,/g, "");
+                if (!/^\d*$/.test(raw)) return;
 
-  {/* DEPARTMENT */}
-<div>
-  <label>Department</label>
-  <input
-    value={department}
-    disabled
-    className="w-full border px-3 py-2 rounded bg-gray-200"
-  />
-</div>
+                const formatted = formatIndianNumber(raw);
+                setTotalFee(formatted);
+                updateRemainingFee(formatted, firstInstallment);
 
-{/* ROLL NUMBER */}
-<div>
-  <label>Roll Number</label>
-  <input
-    value={rollNo}
-    readOnly
-    className="w-full border px-3 py-2 rounded bg-gray-100"
-  />
-</div>
+                if (
+                  Number(firstInstallment.replace(/,/g, "")) <= Number(raw)
+                ) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    firstInstallment: undefined,
+                  }));
+                }
+              }}
+              className="
+w-full
+bg-slate-800
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-white
+placeholder:text-slate-500
+focus:outline-none
+focus:ring-2
+focus:ring-violet-500
+focus:border-violet-500
+transition
+"
+            />
+          </div>
+
+          {/* AADHAAR */}
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Addhar Number
+            </label>          {errors.aadhar && (
+              <p className="text-red-400 text-sm mt-1">{errors.aadhar}</p>
+            )}
+            <input
+              value={aadhar.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim()}
+              maxLength={14}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\D/g, "");
+                if (raw.length <= 12) {
+                  setAadhar(raw);
+                  updateRollNo(firstName, raw, lastName);
+                }
+              }}
+              className="
+w-full
+bg-slate-800
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-white
+placeholder:text-slate-500
+focus:outline-none
+focus:ring-2
+focus:ring-violet-500
+focus:border-violet-500
+transition
+"            />
+          </div>
+
+
+          {/* MOBILE */}
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Mobile Number
+            </label>          {errors.mobile && (
+              <p className="text-red-400 text-sm mt-1">{errors.mobile}</p>
+            )}
+            <input
+              value={mobile}
+              maxLength={10}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (/^\d*$/.test(v)) setMobile(v);
+              }}
+              className="
+w-full
+bg-slate-800
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-white
+placeholder:text-slate-500
+focus:outline-none
+focus:ring-2
+focus:ring-violet-500
+focus:border-violet-500
+transition
+"
+            />
+          </div>
+
+          {/* FIRST INSTALLMENT */}
+          <div>
+            {errors.firstInstallment && (
+              <p className="text-red-400 text-sm mt-1">{errors.firstInstallment}</p>
+            )}
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              First Installment
+            </label>          <input
+              value={firstInstallment}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/,/g, "");
+                if (!/^\d*$/.test(raw)) return;
+
+                const formatted = formatIndianNumber(raw);
+                setFirstInstallment(formatted);
+                updateRemainingFee(totalFee, formatted);
+
+                const total = Number(totalFee.replace(/,/g, "") || 0);
+                const first = Number(raw || 0);
+
+                if (first > total) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    firstInstallment: "Installment cannot exceed Total Fee",
+                  }));
+                } else {
+                  setErrors((prev) => ({
+                    ...prev,
+                    firstInstallment: undefined,
+                  }));
+                }
+              }}
+              className="
+w-full
+bg-slate-800
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-white
+placeholder:text-slate-500
+focus:outline-none
+focus:ring-2
+focus:ring-violet-500
+focus:border-violet-500
+transition
+"
+            />
+          </div>
+
+          {/* PAYMENT MODE + REMAINING FEE (SIDE BY SIDE) */}
+          <div>
+            {errors.paymentMode && (
+              <p className="text-red-400 text-sm mt-1">{errors.paymentMode}</p>
+            )}
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Payment Mode
+            </label>  <select
+              value={paymentMode}
+              onChange={(e) =>
+                setPaymentMode(e.target.value as "Cash" | "Online")
+              }
+              className="
+w-full
+bg-slate-800
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-white
+focus:outline-none
+focus:ring-2
+focus:ring-violet-500
+appearance-none
+"
+            >
+              <option value="Cash">Cash</option>
+              <option value="Online">Online</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Remaining Fee
+            </label>  <input
+              value={remainingFee}
+              readOnly
+              className="
+w-full
+bg-slate-700
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-white
+cursor-not-allowed
+"            />
+          </div>
+
+
+
+          {/* DEPARTMENT */}
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Department
+            </label>  <input
+              value={department}
+              disabled
+              className="
+w-full
+bg-slate-700
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-slate-300
+cursor-not-allowed
+"            />
+          </div>
+
+          {/* ROLL NUMBER */}
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Roll No
+            </label>  <input
+              value={rollNo}
+              readOnly
+              className="
+w-full
+bg-slate-700
+border
+border-slate-700
+rounded-xl
+px-4
+py-3
+text-white
+cursor-not-allowed
+"            />
+          </div>
 
 
 
 
-{/* new code  */}
-{/* AUTO-GENERATED / FIXED FIELDS (Always at bottom) */}
-<div className="col-span-1 sm:col-span-2 lg:col-span-3 
+          {/* new code  */}
+          {/* AUTO-GENERATED / FIXED FIELDS (Always at bottom) */}
+          <div className="col-span-1 sm:col-span-2 lg:col-span-3 
                 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
 
-  {/* Student Photo */}
-  <div>
-    <label>Student Photo</label>
-
-    <div
-      onDragOver={(e) => {
-        e.preventDefault();
-        setIsDragging(true);
-      }}
-      onDragLeave={() => setIsDragging(false)}
-      onDrop={(e) => {
-        e.preventDefault();
-        setIsDragging(false);
-        const file = e.dataTransfer.files?.[0];
-        if (file) handlePhoto(file);
-      }}
-      className={`
+            {/* Student Photo */}
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Student Photo
+              </label>
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setIsDragging(true);
+                }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setIsDragging(false);
+                  const file = e.dataTransfer.files?.[0];
+                  if (file) handlePhoto(file);
+                }}
+                className={`
         border-2 border-dashed p-4 rounded text-center cursor-pointer 
         ${isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"}
       `}
-    >
-      {!photoPreview ? (
-        <p className="text-gray-600">Drag & Drop Only</p>
-      ) : (
-        <img
-          src={photoPreview}
-          className="w-28 h-28 object-cover rounded mx-auto"
-        />
-      )}
+              >
+                {!photoPreview ? (
+                  <p className="text-gray-600">Drag & Drop Only</p>
+                ) : (
+                  <img
+                    src={photoPreview}
+                    className="w-28 h-28 object-cover rounded mx-auto"
+                  />
+                )}
+              </div>
+
+              <input
+                id="photoInput"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => handlePhoto(e.target.files?.[0] || null)}
+              />
+            </div>
+
+          </div>
+
+
+          {/* BUTTONS */}
+          <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center gap-4 mt-3">
+            <Button
+              type="submit"
+              className="bg-blue-700 text-white px-8 py-2"
+              disabled={loading}
+            >
+              {loading ? "Uploading..." : "Submit"}
+            </Button>
+
+            <Button
+              type="button"
+              className="bg-gray-600 text-white px-6 py-2"
+              onClick={() => navigate(-1)}
+            >
+              Cancel
+            </Button>
+
+
+          </div>
+        </form>
+
+        {/* SUCCESS POPUP */}
+        {showSuccess && (
+          <SuccessScreen
+            title="Student Added!"
+            message="The student record has been successfully saved."
+            buttonText="OK"
+            onClose={() => setShowSuccess(false)}
+          />
+        )}
+        {invoiceData && (
+          <div style={{ position: "fixed", left: "-9999px", top: 0 }}>
+            <div ref={invoiceRef}>
+              <InvoiceTemplate data={invoiceData} />
+            </div>
+          </div>
+        )}
+
+
+
+      </div>
     </div>
-
-    <input
-      id="photoInput"
-      type="file"
-      accept="image/*"
-      className="hidden"
-      onChange={(e) => handlePhoto(e.target.files?.[0] || null)}
-    />
-  </div>
-
-</div>
-
-
-        {/* BUTTONS */}
-        <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center gap-4 mt-3">
-          <Button
-            type="submit"
-            className="bg-blue-700 text-white px-8 py-2"
-            disabled={loading}
-          >
-            {loading ? "Uploading..." : "Submit"}
-          </Button>
-
-          <Button
-            type="button"
-            className="bg-gray-600 text-white px-6 py-2"
-            onClick={() => navigate(-1)}
-          >
-            Cancel
-          </Button>
-
-          
-        </div>
-     </form>
-
-{/* SUCCESS POPUP */}
-{showSuccess && (
-  <SuccessScreen
-    title="Student Added!"
-    message="The student record has been successfully saved."
-    buttonText="OK"
-    onClose={() => setShowSuccess(false)}
-  />
-)}
-{invoiceData && (
-  <div style={{ position: "fixed", left: "-9999px", top: 0 }}>
-    <div ref={invoiceRef}>
-      <InvoiceTemplate data={invoiceData} />
-    </div>
-  </div>
-)}
-
-
-
-</div>
-
   );
-  }
+}
