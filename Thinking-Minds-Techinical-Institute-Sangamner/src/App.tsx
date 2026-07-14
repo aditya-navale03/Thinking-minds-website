@@ -46,6 +46,9 @@ import CertificateVerification from "./pages/Verification/CertificateVerificatio
 
 const queryClient = new QueryClient();
 
+//maintance mode on
+const MAINTENANCE_MODE = true;
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -71,7 +74,26 @@ const App = () => (
 
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+
+      {/*  maintance mode */}
+        
+<BrowserRouter>
+
+  {MAINTENANCE_MODE &&
+    !window.location.pathname.startsWith("/admin") ? (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center px-6">
+          <h1 className="text-4xl font-bold mb-4">
+            Thinking Minds Website is Under Maintenance
+          </h1>
+
+          <p className="text-muted-foreground text-lg">
+            We are updating our system. Please visit again later.
+          </p>
+        </div>
+      </div>
+    ) : (
+      
         <Routes>
           {/* Home */}
           <Route path="/" element={<Index />} />
@@ -114,7 +136,7 @@ const App = () => (
 
         </Routes>
 
-
+    )}
 
 
 
