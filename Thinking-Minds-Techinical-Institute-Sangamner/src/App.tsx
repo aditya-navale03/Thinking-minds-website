@@ -4,6 +4,9 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+//new dashboard
+import AdminLayout from "./pages/Admin/AdminLayout";
+
 //reminder
 import Reminders from "./pages/Admin/Reminders";
 
@@ -31,7 +34,7 @@ import NotFound from "./pages/NotFound";
 
 // Admin Pages
 import AdminLogin from "./pages/Admin/AdminLogin";
-import CivilDashboard from "./pages/Admin/CivilAdminDashboard";
+import CivilDashboard from "./pages/Admin/CivilDashboard";
 import ITDashboard from "./pages/Admin/ItAdminDashboard";
 import AddStudent from "./pages/Admin/AddStudent";
 import RemoveStudent from "./pages/Admin/RemoveStudent";
@@ -82,27 +85,28 @@ const App = () => (
 
           {/* Admin Login */}
           <Route path="/admin" element={<AdminLogin />} />
+<Route path="/admin" element={<AdminLayout />}>
 
-          {/* Dashboards */}
-          <Route path="/admin/dashboard-civil" element={<CivilDashboard />} />
-          <Route path="/admin/dashboard-it" element={<ITDashboard />} />
+  {/* Civil */}
+  <Route path="dashboard-civil" element={<CivilDashboard />} />
 
-          {/* View students department-wise */}
-          <Route path="/admin/students/:dept" element={<ViewStudents />} />
+  {/* IT */}
+  <Route path="dashboard-it" element={<ITDashboard />} />
 
-          {/* Student Actions */}
-          <Route path="/admin/add-student" element={<AddStudent />} />
-          <Route path="/admin/remove-student" element={<RemoveStudent />} />
+  {/* Common */}
+  <Route path="students/:dept" element={<ViewStudents />} />
 
-          {/* dashboard route */}
-          <Route path="/admin/dashboard" element={<Dashboard />} />
+  <Route path="add-student" element={<AddStudent />} />
 
-          {/* reminder */}
-          <Route path="/admin/reminders" element={<Reminders />} />
+  <Route path="remove-student" element={<RemoveStudent />} />
 
+  <Route path="dashboard" element={<Dashboard />} />
 
-          {/* Update student needs ID */}
-          <Route path="/admin/update-student/:dept/:id" element={<UpdateStudent />} />
+  <Route path="reminders" element={<Reminders />} />
+
+  <Route path="update-student/:dept/:id" element={<UpdateStudent />} />
+
+</Route>
           <Route path="*" element={<NotFound />} />
 
 
