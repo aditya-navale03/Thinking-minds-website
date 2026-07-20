@@ -1,39 +1,126 @@
-import { useState } from "react";
 import { Button } from "../../components/ui/button";
-import { migrateStudents } from "../../utils/migrateStudents";
 
-export default function MigrateStudents() {
-  const [loading, setLoading] = useState<boolean>(false);
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 
-  const handleMigration = async (): Promise<void> => {
-    const confirmRun = window.confirm(
-      "Are you sure? This will migrate data."
-    );
-    if (!confirmRun) return;
+import { db } from "../../firebase/firebaseConfig";
 
-    setLoading(true);
-    await migrateStudents();
-    setLoading(false);
+export default function MigrateRollNo() {
+
+  const migrateRollNo = async () => {
+    try {
+      const studentsSnapshot =
+        await getDocs(
+          collection(db, "students")
+        );
+
+      let updated = 0;
+      let skipped = 0;
+
+      for (const studentDoc of studentsSnapshot.docs) {
+
+        const studentData =
+          studentDoc.data();
+
+        const profileRef = doc(
+          db,
+          "studentProfiles",
+          studentDoc.id
+        );
+
+        const profileSnap =
+          await getDoc(profileRef);
+
+        // student profile missing
+        if (!profileSnap.exists()) {
+          skipped++;
+          continue;
+        }
+
+        // already migrated
+        if (
+          profileSnap.data().rollNo
+        ) {
+          skipped++;
+          continue;
+        }
+
+        await updateDoc(
+          profileRef,
+          {
+            rollNo:
+              studentData.rollNo || "",
+          }
+        );
+
+        updated++;
+      }
+
+      alert(
+        `Migration Completed
+
+Updated : ${updated}
+Skipped : ${skipped}`
+      );
+
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        "Migration failed."
+      );
+    }
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">
-        Students Migration Panel
-      </h1>
+    <div className="
+      min-h-screen
+      flex
+      items-center
+      justify-center
+      bg-slate-950
+    ">
+      <div className="
+        bg-slate-900
+        p-10
+        rounded-3xl
+        border
+        border-slate-800
+        text-center
+        space-y-6
+      ">
 
-      <p className="mb-4 text-gray-600">
-        Run this once to convert old array students into document format.
-      </p>
+        <h1 className="
+          text-3xl
+          font-bold
+          text-white
+        ">
+          Roll Number Migration
+        </h1>
 
-      <Button
-      
-        onClick={handleMigration}
-        disabled={loading}
-        className="bg-red-600 text-white px-6 py-2"
-      >
-        {loading ? "Migrating..." : "Migrate Old Students"}
-      </Button>
+        <p className="text-slate-400">
+          This will copy roll numbers
+          from students to
+          studentProfiles.
+        </p>
+
+        <Button
+          onClick={migrateRollNo}
+          className="
+            bg-green-600
+            hover:bg-green-700
+            text-white
+          "
+        >
+          Start Migration
+        </Button>
+
+      </div>
     </div>
   );
 }

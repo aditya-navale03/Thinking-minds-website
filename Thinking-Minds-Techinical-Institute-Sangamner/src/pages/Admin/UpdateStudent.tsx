@@ -4,393 +4,730 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import { Button } from "../../components/ui/button";
 
-import InstallmentInvoiceTemplate
-  from "../../components/invoice/InstallmentInvoiceTemplate"
 
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import InvoiceTemplate from "../../components/invoice/InvoiceTemplate";
-import { useRef } from "react";
+import { courses } from "../../data/courses";
+
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  addDoc,
+  deleteDoc,
+} from "firebase/firestore";
+
 
 export default function UpdateStudent() {
   const { dept, id } = useParams();
   const docId = id || "";
+      const [receiptNo, setReceiptNo] = useState("");
+      const [rollNo, setRollNo] = useState("");
+
+  const courseOptions = courses
+  .filter(
+    (c) =>
+      c.category.toLowerCase() ===
+      dept?.toLowerCase()
+  )
+  .map((c) => c.name.toUpperCase());
 
   const navigate = useNavigate();
+  const [showAddCourseModal, setShowAddCourseModal] =
+  useState(false);
 
-  type Student = {
-  fullName: string;
-  email: string;
-  mobile: string;
-  aadhar: string;
-  dob: string;
-  course: string;
-  totalFee: number;
-  firstInstallment: number;
-  remainingFee: number;
-  paymentMode: string;
-  photoURL?: string;
-};
+const [newCourse, setNewCourse] = useState("");
+const [courseExists, setCourseExists] = useState(false);
+const [newTotalFee, setNewTotalFee] = useState("");
+const [newFirstInstallment, setNewFirstInstallment] =
+  useState("");
+const [newRemainingFee, setNewRemainingFee] =
+  useState("");
+const [newPaymentMode, setNewPaymentMode] =
+  useState("Cash");
 
-const [student, setStudent] = useState<Student | null>(null);
-
-type InvoiceData = {
-  studentName: string;
-  course: string;
-  mobile: string;
-  paymentMode: string;
-  date: string;
-  installmentPaid: number;
-  totalPaid: number;
-  totalFee: number;
-  remainingFee: number;
-};
-const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
   // Editable fields
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const [aadhar, setAadhar] = useState("");
   const [dob, setDob] = useState("");
-  const [course, setCourse] = useState("");
-  const [totalFee, setTotalFee] = useState("");
-  const [firstInstallment, setFirstInstallment] = useState("");
   const [photoURL, setPhotoURL] = useState("");
+
+
 
   // -------- LOAD FROM FIREBASE --------
   const formatDateForInput = (dob: string) => {
-    const [day, month, year] = dob.split("-");
-    return `${year}-${month}-${day}`; // YYYY-MM-DD
-  };
+  if (!dob) return "";
 
-  const invoiceRef = useRef<HTMLDivElement | null>(null);
+  const parts = dob.split("-");
 
-  const [nextInstallment, setNextInstallment] = useState("");
-  const [paymentMode, setPaymentMode] = useState("");
+  // already YYYY-MM-DD
+  if (parts[0].length === 4) {
+    return dob;
+  }
 
+  const [day, month, year] = parts;
+  return `${year}-${month}-${day}`;
+};
+
+const formatDateForFirestore = (dob: string) => {
+  if (!dob) return "";
+
+  const parts = dob.split("-");
+
+  // already DD-MM-YYYY
+  if (parts[0].length === 2) {
+    return dob;
+  }
+
+  const [year, month, day] = parts;
+  return `${day}-${month}-${year}`;
+};
+
+
+  const [enrollments, setEnrollments] = useState<any[]>([]);
   useEffect(() => {
     const loadStudent = async () => {
-      if (!dept) {
-        alert("Department missing");
-        navigate(-1);
-        return;
-      }
+      const studentRef = doc(
+        db,
+        "studentProfiles",
+        docId
+      );
 
-     const ref = doc(db, "students", docId);
+      const studentSnap =
+        await getDoc(studentRef);
 
-      const snap = await getDoc(ref);
-
-      if (!snap.exists()) {
+      if (!studentSnap.exists()) {
         alert("Student not found");
         navigate(-1);
         return;
       }
 
-const s = snap.data() as Student;
-      setStudent(s);
+      const s = studentSnap.data() as any;
+      const q = query(
+        collection(db, "enrollments"),
+        where("studentId", "==", docId)
+      );
+
+
+
+      const enrollmentSnapshot =
+        await getDocs(q);
+
+      const enrollmentList =
+        enrollmentSnapshot.docs.map(
+          (doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })
+        );
+
+      setEnrollments(enrollmentList);
 
       setFullName(s.fullName);
       setEmail(s.email);
       setMobile(s.mobile);
       setAadhar(s.aadhar);
       setDob(formatDateForInput(s.dob));
-      setCourse(s.course);
-      setTotalFee(String(s.totalFee));
-      setFirstInstallment(String(s.firstInstallment));
       setPhotoURL(s.photoURL || "");
+      setReceiptNo(s.receiptNo || "");
+      setRollNo(s.rollNo || "");
     };
 
     loadStudent();
-  }, [dept, docId]);
 
-
-  const updatedFirstInstallment =
-    Number(firstInstallment) + Number(nextInstallment);
-
-  const updatedRemaining =
-    Number(totalFee) - updatedFirstInstallment;
-
-  const save = async () => {
-    if (!dept || !docId) {
-      alert("Missing department or student id");
-      return;
-    }
-
-    if (!paymentMode) {
-      alert("Please select a payment mode before saving.");
-      return;
-    }
+  }, [docId]);
 
 
 
-   const ref = doc(db, "students", docId);
-    const installmentAmount =
-      Number(nextInstallment || 0);
+  const savePersonalInfo = async () => {
+    if (!docId) return;
 
-    const updatedFirstInstallment =
-      Number(firstInstallment) + installmentAmount;
+    await updateDoc(
+      doc(db, "studentProfiles", docId),
+      {
+        fullName,
+        email,
+        mobile,
+        aadhar,
+        dob: formatDateForFirestore(dob),
+      }
+    );
 
-    const updatedRemaining =
-      Number(totalFee) - updatedFirstInstallment;
-
-    // 🔹 Update Firestore
-    await updateDoc(ref, {
-      fullName,
-      email,
-      mobile,
-      aadhar,
-      dob,
-      course,
-      totalFee: Number(totalFee),
-      firstInstallment: updatedFirstInstallment,
-      remainingFee: updatedRemaining,
-      paymentMode,
-    });
-
-    // 🔹 Prepare Invoice Data
-   setInvoiceData({
-  studentName: fullName,
-  course,
-  mobile,
-  paymentMode,
-  date: new Date().toLocaleDateString("en-GB"),
-
-  installmentPaid: installmentAmount,
-  totalPaid: updatedFirstInstallment,
-  totalFee: Number(totalFee),
-  remainingFee: updatedRemaining,
-});
-
-};
-const generatePDF = async () => {
-  if (!invoiceRef.current) {
-    console.log("Invoice ref missing");
-    return;
+    alert("Personal information updated successfully.");
+  };
+ 
+  if (!fullName) {
+    return (
+      <p className="text-center mt-10">
+        Loading...
+      </p>
+    );
   }
 
-  const canvas = await html2canvas(
-    invoiceRef.current,
-    { scale: 2 }
-  );
+  const updateNewRemainingFee = (
+  total: string,
+  first: string
+) => {
+  const totalValue = Number(total || 0);
+  const firstValue = Number(first || 0);
 
-  const imgData =
-    canvas.toDataURL("image/png");
+  const remaining =
+    Math.max(0, totalValue - firstValue);
 
-  const pdf = new jsPDF(
-    "p",
-    "mm",
-    "a4"
-  );
-
-  const pdfWidth =
-    pdf.internal.pageSize.getWidth();
-
-  const pdfHeight =
-    (canvas.height * pdfWidth) /
-    canvas.width;
-
-  pdf.addImage(
-    imgData,
-    "PNG",
-    0,
-    0,
-    pdfWidth,
-    pdfHeight
-  );
-
-  const fileName = `installment-${fullName}.pdf`;
-pdf.save(fileName);
-
-// 🔥 WhatsApp message
-const message = `Hello ${fullName},
-
-Your installment payment receipt has been generated.
-
-Amount Paid: ₹${invoiceData?.installmentPaid}
-Remaining Fee: ₹${invoiceData?.remainingFee}
-
-Please find your receipt attached.
-
-- Thinking Minds Institute`;
-
-const phone = `91${mobile}`; // India code
-
-const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-
-window.open(url, "_blank");
+  setNewRemainingFee(String(remaining));
 };
 
-useEffect(() => {
-  if (!invoiceData) return;
+const addNewCourse = async () => {
 
-  const run = async () => {
-    await generatePDF();
-    alert("Receipt Generated ✅");
-    navigate(-1);
-  };
 
-  run();
-}, [invoiceData]);
-if (!student) {
-  return <p className="text-center mt-10">Loading...</p>;
-}
+  const existingCourse = enrollments.find(
+    (e) =>
+      e.courseName.toUpperCase() ===
+      newCourse.toUpperCase()
+  );
+
+  if (existingCourse) {
+    alert(
+      `Student is already enrolled in ${newCourse}.`
+    );
+    return;
+  }
+console.log("Student Receipt:", receiptNo);
+await addDoc(
+  collection(db, "enrollments"),
+  {
+    studentId: docId,
+    courseName: newCourse.toUpperCase(),
+    totalFee: Number(newTotalFee),
+    feePaid: Number(newFirstInstallment),
+    remainingFee: Number(newRemainingFee),
+    paymentMode: newPaymentMode,
+    receiptNo,
+    department: dept?.toUpperCase(),
+  }
+);
+
+const q = query(
+  collection(db, "enrollments"),
+  where("studentId", "==", docId)
+);
+
+const enrollmentSnapshot =
+  await getDocs(q);
+
+const enrollmentList =
+  enrollmentSnapshot.docs.map(
+    (doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })
+  );
+
+setEnrollments(enrollmentList);
+
+alert("Course added successfully.");
+};
+const deleteCourse = async (
+  enrollmentId: string,
+  courseName: string
+) => {
+  const confirmed = window.confirm(
+    `Delete ${courseName} course?`
+  );
+
+  if (!confirmed) return;
+
+  await deleteDoc(
+    doc(db, "enrollments", enrollmentId)
+  );
+
+  setEnrollments((prev) =>
+    prev.filter(
+      (e) => e.id !== enrollmentId
+    )
+  );
+
+  alert("Course deleted successfully.");
+};
+
   return (
-    <div className="min-h-screen bg-gray-100 px-6 py-10 flex justify-center">
-      <div className="w-full max-w-5xl bg-white shadow-xl rounded-2xl p-10 border">
+    <div className="
+min-h-screen
+bg-gradient-to-br
+from-slate-950
+via-slate-900
+to-slate-950
+px-4
+sm:px-6
+lg:px-8
+py-8
+text-white
+">
 
-        <h1 className="text-3xl font-bold mb-8 text-center">Update Student</h1>
+      <div className="
+max-w-7xl
+mx-auto
+space-y-10
+">
 
-        {/* 3 Column Form Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* HEADER */}
+        <div className="
+bg-slate-900/70
+backdrop-blur-xl
+border
+border-slate-800
+rounded-3xl
+shadow-[0_10px_40px_rgba(0,0,0,0.35)]
+p-6
+md:p-8
+">
+          <h1 className="
+text-3xl
+md:text-5xl
+font-bold
+bg-gradient-to-r
+from-blue-400
+to-cyan-400
+bg-clip-text
+text-transparent
+">
+            Update Student
+          </h1>
 
-          <div>
-            <label className="font-semibold">Full Name</label>
-            <input
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="border w-full px-3 py-3 rounded-xl shadow-sm"
-            />
+          <p className="text-slate-400 mt-3 text-lg">
+            Manage student profile and enrolled courses
+          </p>
+        </div>
+
+        {/* COURSES SECTION */}
+        <div className="
+bg-slate-900/70
+backdrop-blur-xl
+border
+border-slate-800
+rounded-3xl
+shadow-[0_10px_40px_rgba(0,0,0,0.35)]
+p-6
+md:p-8
+">
+
+         <div className="flex items-center justify-between mb-6">
+  <div>
+    <h2 className="text-xl font-bold text-white">
+      Student Courses
+    </h2>
+
+    <p className="text-slate-400 text-sm">
+      Manage fees and installments
+    </p>
+  </div>
+
+  <Button
+onClick={() =>
+  navigate(
+    `/admin/add-course/${dept}/${docId}`
+  )
+}    className="
+      bg-green-600
+      hover:bg-green-700
+      text-white
+    "
+  >
+    + Add New Course
+  </Button>
+</div>
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+            {enrollments.map((enrollment) => (
+              <div
+                key={enrollment.id}
+                className="
+group
+relative
+overflow-hidden
+rounded-3xl
+border
+border-slate-800
+bg-gradient-to-br
+from-slate-900
+to-slate-950
+p-6
+transition-all
+duration-300
+hover:-translate-y-2
+hover:border-blue-500
+hover:shadow-[0_20px_50px_rgba(59,130,246,0.25)]
+"            >
+                <h3 className="text-xl font-semibold text-white">
+                  {enrollment.courseName}
+                </h3>
+
+                <div className="mt-4 space-y-2 text-slate-300">
+
+                  <div className="
+flex
+items-center
+justify-between
+py-2
+border-b
+border-slate-800
+last:border-none
+">
+                    <span>Total Fee</span>
+                    <span>₹{enrollment.totalFee}</span>
+                  </div>
+
+                  <div className="
+flex
+items-center
+justify-between
+py-2
+border-b
+border-slate-800
+last:border-none
+">
+                    <span>Paid</span>
+                    <span className="text-green-600 font-semibold">
+                      ₹{enrollment.feePaid}
+                    </span>
+                  </div>
+
+                <div className="
+flex
+items-center
+justify-between
+py-2
+border-b
+border-slate-800
+last:border-none
+">
+  <span>Remaining</span>
+
+  {enrollment.remainingFee === 0 ? (
+    <span className="
+      bg-green-500/20
+      text-green-400
+      px-3
+      py-1
+      rounded-full
+      text-xs
+      font-bold
+    ">
+      PAID
+    </span>
+  ) : (
+    <span className="
+      text-red-500
+      font-semibold
+    ">
+      ₹{enrollment.remainingFee}
+    </span>
+  )}
+</div>
+                </div>
+
+                <Button
+                  className="
+w-full
+mt-8
+h-12
+rounded-xl
+font-semibold
+bg-gradient-to-r
+from-blue-600
+to-cyan-600
+hover:from-blue-700
+hover:to-cyan-700
+shadow-lg
+"onClick={() =>
+  navigate(
+    `/admin/manage-course/${docId}/${enrollment.id}`
+  )
+}
+                >
+                  Manage Course Enrollment
+                </Button>
+
+                <Button
+  className="
+    w-full
+    mt-3
+    bg-red-600
+    hover:bg-red-700
+    text-white
+  "
+  onClick={() =>
+    deleteCourse(
+      enrollment.id,
+      enrollment.courseName
+    )
+  }
+>
+  Delete Course
+</Button>
+              </div>
+            ))}
+
+          </div>
+        </div>
+
+        {/* PERSONAL INFORMATION */}
+        <div className="
+bg-slate-900/70
+backdrop-blur-xl
+border
+border-slate-800
+rounded-3xl
+shadow-[0_10px_40px_rgba(0,0,0,0.35)]
+p-6
+md:p-8
+">
+
+          <h2 className="text-xl font-bold text-white mb-6">
+            Personal Information
+          </h2>
+
+          <div className="grid
+grid-cols-1
+md:grid-cols-2
+xl:grid-cols-3
+gap-8">
+
+            <div>
+              <label className="block text-sm
+font-medium
+text-slate-300
+tracking-wide mb-2">
+                Full Name
+              </label>
+
+              <input
+                value={fullName}
+                onChange={(e) =>
+                  setFullName(e.target.value.toUpperCase())
+                }
+                className="
+w-full
+bg-[#0f172a]
+border
+border-slate-700
+text-white
+rounded-2xl
+px-5
+py-3.5
+text-base
+transition-all
+duration-200
+hover:border-slate-500
+focus:scale-[1.01]
+focus:outline-none
+focus:ring-2
+focus:ring-blue-500
+focus:border-blue-500
+placeholder:text-slate-500
+"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm
+font-medium
+text-slate-300
+tracking-wide mb-2">
+                Email
+              </label>
+
+              <input
+                value={email}
+                onChange={(e) =>
+                  setEmail(e.target.value.toLowerCase())
+                }
+                className="
+w-full
+bg-[#0f172a]
+border
+border-slate-700
+text-white
+rounded-2xl
+px-5
+py-3.5
+text-base
+transition-all
+duration-200
+hover:border-slate-500
+focus:scale-[1.01]
+focus:outline-none
+focus:ring-2
+focus:ring-blue-500
+focus:border-blue-500
+placeholder:text-slate-500
+"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm
+font-medium
+text-slate-300
+tracking-wide mb-2">
+                Mobile
+              </label>
+
+              <input
+                value={mobile}
+                onChange={(e) =>
+                  setMobile(
+                    e.target.value.replace(/\D/g, "")
+                  )
+                }
+                className="
+w-full
+bg-[#0f172a]
+border
+border-slate-700
+text-white
+rounded-2xl
+px-5
+py-3.5
+text-base
+transition-all
+duration-200
+hover:border-slate-500
+focus:scale-[1.01]
+focus:outline-none
+focus:ring-2
+focus:ring-blue-500
+focus:border-blue-500
+placeholder:text-slate-500
+"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm
+font-medium
+text-slate-300
+tracking-wide mb-2">
+                Aadhaar
+              </label>
+              <input
+                value={aadhar.replace(/(\d{4})(?=\d)/g, "$1 ")}
+                onChange={(e) => {
+                  const rawValue = e.target.value
+                    .replace(/\s/g, "")
+                    .replace(/\D/g, "")
+                    .slice(0, 12);
+
+                  setAadhar(rawValue);
+                }}
+                maxLength={14}
+                className="
+w-full
+border
+border-slate-700
+rounded-2xl
+px-5
+py-3.5
+text-base
+transition-all
+duration-200
+hover:border-slate-500
+focus:scale-[1.01]
+bg-slate-800
+text-white
+focus:outline-none
+focus:ring-2
+focus:ring-blue-500
+focus:border-blue-500
+transition
+"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm
+font-medium
+text-slate-300
+tracking-wide mb-2">
+                Date Of Birth
+              </label>
+
+              <input
+                type="date"
+                value={dob}
+                onChange={(e) => setDob(e.target.value)}
+                className="
+w-full
+bg-[#0f172a]
+border
+border-slate-700
+text-white
+rounded-2xl
+px-5
+py-3.5
+text-base
+transition-all
+duration-200
+hover:border-slate-500
+focus:scale-[1.01]
+focus:outline-none
+focus:ring-2
+focus:ring-blue-500
+focus:border-blue-500
+placeholder:text-slate-500
+"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm
+font-medium
+text-slate-300
+tracking-wide mb-2">
+                Department
+              </label>
+
+              <input
+                value={dept?.toUpperCase() || ""}
+                readOnly
+                className="
+  w-full
+  bg-[#0f172a]
+  border
+  border-slate-700
+  rounded-xl
+  px-4
+  py-3
+  text-slate-300
+  shadow-inner
+  cursor-not-allowed
+  "
+              />
+            </div>
+
           </div>
 
-          <div>
-            <label className="font-semibold">Email</label>
-            <input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="border w-full px-3 py-3 rounded-xl shadow-sm"
-            />
-          </div>
+          <div className="flex justify-end gap-4 mt-8">
 
-          <div>
-            <label className="font-semibold">Mobile</label>
-            <input
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
-              className="border w-full px-3 py-3 rounded-xl shadow-sm"
-            />
-          </div>
-
-          <div>
-            <label className="font-semibold">Aadhar</label>
-            <input
-              value={aadhar}
-              onChange={(e) => setAadhar(e.target.value)}
-              className="border w-full px-3 py-3 rounded-xl shadow-sm"
-            />
-          </div>
-
-          <div>
-            <label className="font-semibold">Date of Birth</label>
-            <input
-              type="date"
-              value={dob}
-              onChange={(e) => setDob(e.target.value)}
-              className="border w-full px-3 py-3 rounded-xl shadow-sm"
-            />
-          </div>
-
-          <div>
-            <label className="font-semibold">Course</label>
-            <input
-              value={course}
-              onChange={(e) => setCourse(e.target.value)}
-              className="border w-full px-3 py-3 rounded-xl shadow-sm"
-            />
-          </div>
-
-          <div>
-            <label className="font-semibold">Total Fee</label>
-            <input
-              value={totalFee}
-              onChange={(e) => setTotalFee(e.target.value)}
-              className="border w-full px-3 py-3 rounded-xl shadow-sm"
-            />
-          </div>
-
-          <div>
-            <label className="font-semibold">1st Installment</label>
-            <input
-              value={firstInstallment}
-              readOnly
-              className="border w-full px-3 py-3 bg-gray-200 rounded-xl shadow-sm"
-            />
-          </div>
-
-          <div>
-            <label className="font-semibold">Next Installment</label>
-            <input
-              value={nextInstallment}
-              onChange={(e) => setNextInstallment(e.target.value)}
-              className="border w-full px-3 py-3 rounded-xl shadow-sm"
-            />
-          </div>
-
-          <div>
-            <label className="font-semibold">Remaining Fee</label>
-            <input
-              readOnly
-              value={updatedRemaining}
-              className="border w-full px-3 py-3 bg-gray-200 rounded-xl shadow-sm"
-            />
-          </div>
-
-          <div>
-            <label className="font-semibold">Department</label>
-            <input
-              readOnly
-              value={dept.toUpperCase() || ""}
-              className="border w-full px-3 py-3 bg-gray-200 rounded-xl shadow-sm"
-            />
-          </div>
-
-          <div>
-            <label className="font-semibold">Payment Mode</label>
-
-            <select
-              value={paymentMode}
-              onChange={(e) => setPaymentMode(e.target.value)}
-              className="border w-full px-3 py-3 rounded-xl shadow-sm"
+            <Button
+              onClick={savePersonalInfo}
+              className="bg-blue-600 hover:bg-blue-700"
             >
-              <option value="">Select Mode</option>
-              <option value="Cash">Cash</option>
-              <option value="online">Online</option>
-            </select>
+              Save Personal Info
+            </Button>
+
+            <Button
+              onClick={() => navigate(-1)}
+              className="bg-slate-600 hover:bg-slate-700"
+            >
+              Cancel
+            </Button>
+
           </div>
 
         </div>
-
-        {/* Buttons */}
-        <div className="flex justify-center gap-6 mt-10">
-          <Button onClick={save} className="bg-blue-600 text-white px-10 py-3 text-lg rounded-xl">
-            Save
-          </Button>
-
-
-
-          <Button
-            onClick={() => navigate(-1)}
-            className="bg-gray-600 text-white px-10 py-3 text-lg rounded-xl"
-          >
-            Cancel
-          </Button>
         </div>
-
-        <div
-          ref={invoiceRef}
-          style={{
-            position: "fixed",
-            left: "-9999px",
-            top: 0,
-            width: "900px",
-          }}
-        >
-          {invoiceData && (
-            <InstallmentInvoiceTemplate
-              data={invoiceData}
-            />
-          )}        </div>
 
       </div>
-    </div>
-  );
-}
+  )};

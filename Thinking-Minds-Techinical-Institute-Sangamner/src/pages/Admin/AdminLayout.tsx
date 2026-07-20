@@ -1,7 +1,7 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebaseConfig";
-
+import { useEffect } from "react";
 import {
     LayoutDashboard,
     UserPlus,
@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 
 export default function AdminLayout() {
+
+    
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -20,7 +22,8 @@ export default function AdminLayout() {
     const handleLogout = async () => {
         await signOut(auth);
         localStorage.removeItem("admin_department");
-        navigate("/admin");
+        localStorage.removeItem("admin_email");
+        navigate("/", { replace: true});
     };
 
     const menuItems = [
@@ -33,7 +36,7 @@ export default function AdminLayout() {
                     : "/admin/dashboard-it",
         },
         {
-            title: "Add Student",
+            title: "New Registration",
             icon: UserPlus,
             path: "/admin/add-student",
         },
@@ -51,6 +54,26 @@ export default function AdminLayout() {
             path: "/admin/remove-student",
         },
         {
+            title: "Add Expenses",
+            icon: Bell,
+            path: "/admin/expenses",
+        },
+        {
+            title: "Student Notices",
+            icon: Bell,
+            path: "/admin/notices",
+        },
+        {
+            title: "Certificate Requests",
+            icon: Bell,
+            path: "/admin/certificate-requests",
+        },
+        {
+            title: "Enquiry Management",
+            icon: Bell,
+            path: "/admin/enquiries",
+        },
+        {
             title: "All Students Fee Reminders",
             icon: Bell,
             path: "/admin/reminders",
@@ -58,7 +81,7 @@ export default function AdminLayout() {
     ];
 
     return (
-        <div className="flex h-screen bg-slate-950 overflow-auto">
+        <div className="flex h-screen bg-slate-950 overflow-hidden">
 
             {/* Sidebar */}
             <aside className="w-72 bg-slate-900 border-r border-slate-800 flex flex-col">
@@ -77,7 +100,7 @@ export default function AdminLayout() {
                 </div>
 
                 {/* Menu */}
-                <div className="flex-1 px-4 py-6 space-y-2">
+                <div className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
 
                     {menuItems.map((item) => {
                         const Icon = item.icon;
@@ -88,7 +111,7 @@ export default function AdminLayout() {
                             <button
                                 key={item.title}
                                 onClick={() => navigate(item.path)}
-                                className={`w-full h-14 flex items-center gap-4 px-4 rounded-xl transition-all duration-300
+                                className={`w-full h-11 flex items-center gap-4 px-4 rounded-xl transition-all duration-300
     ${active
                                         ? "bg-violet-600 text-white shadow-lg"
                                         : "text-slate-300 hover:bg-slate-800 hover:text-white"
@@ -111,7 +134,7 @@ export default function AdminLayout() {
 
                     <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white rounded-xl px-4 py-3 transition"
+                        className="w-full h-12 flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white rounded-xl px-4 py-3 transition"
                     >
                         <LogOut size={20} />
                         Logout

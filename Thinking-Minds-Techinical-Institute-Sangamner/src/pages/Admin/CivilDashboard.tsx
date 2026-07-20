@@ -33,10 +33,7 @@ const [totalFees, setTotalFees] = useState(0);
 const [feesCollected, setFeesCollected] = useState(0);
 const [pendingFees, setPendingFees] = useState(0);
 
-//names on dashbard
-const [students, setStudents] = useState<
-  { fullName: string; course: string }[]
->([]);
+
 //dashboard new 
 const loadDashboard = async () => {
   try {
@@ -52,7 +49,7 @@ const loadDashboard = async () => {
 
     // Student Data
     const q = query(
-      collection(db, "students"),
+      collection(db, "enrollments"),
       where("department", "==", "CIVIL")
     );
 
@@ -62,23 +59,19 @@ const loadDashboard = async () => {
     let total = 0;
     let paid = 0;
     let remaining = 0;
-let studentList: { fullName: string; course: string }[] = [];
-snapshot.forEach((student) => {
+
+    snapshot.forEach((student) => {
   const data = student.data();
 
   total += Number(data.totalFee || 0);
   paid += Number(data.feePaid || 0);
   remaining += Number(data.remainingFee || 0);
 
-studentList.push({
-  fullName: data.fullName,
-  course: data.course,
-});});
+});
 
     setTotalFees(total);
     setFeesCollected(paid);
     setPendingFees(remaining);
-    setStudents(studentList);
 
   } catch (err) {
     console.error(err);
@@ -106,17 +99,17 @@ studentList.push({
 }, [navigate]);
 
   return (
-<div>
+<div className="p-6 space-y-8">
 
-    <h1 className="text-4xl font-bold text-white">
+    <h1 className="text-4xl font-bold text-white mb-2">
         Welcome Back 👋
     </h1>
 
-    <p className="text-slate-400 mt-2">
+    <p className="text-slate-400">
         Civil Department Dashboard
     </p>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 pt-2">
 
        <DashboardCard
     title="Total Students"
@@ -147,34 +140,6 @@ studentList.push({
 />
 
     </div>
-
-    <div className="mt-10 bg-slate-900 rounded-2xl p-6 border border-slate-800">
-  <h2 className="text-xl font-semibold text-white mb-4">
-    Student List
-  </h2>
-
-  <table className="w-full">
-  <thead>
-    <tr className="text-slate-400 border-b border-slate-700">
-      <th className="text-left py-2">#</th>
-      <th className="text-left py-2">Student Name</th>
-      <th className="text-left py-2">Course</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    {students.map((student, index) => (
-      <tr key={index} className="border-b border-slate-800">
-        <td className="py-2 text-white">{index + 1}</td>
-        <td className="py-2 text-white">{student.fullName}</td>
-        <td className="py-2 text-slate-300">{student.course}</td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-</div>
-
-
 </div>
 );
 }

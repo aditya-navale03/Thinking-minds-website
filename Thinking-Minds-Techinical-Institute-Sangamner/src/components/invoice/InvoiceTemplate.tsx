@@ -1,12 +1,12 @@
 const InvoiceTemplate = ({ data }) => {
   return (
-    <div className="max-w-3xl mx-auto bg-white p-6 border text-sm">
+    <div className="max-w-3xl mx-auto bg-white text-black p-6 border text-sm">
       
       <h1 className="text-lg font-bold mb-2">FEE RECEIPT :</h1>
 
       <div className="flex justify-between mb-4">
         <div>
-          <h2 className="font-bold text-base">Thinking Minds Techinical Training Instutute, Sangamner</h2> <br /><br />
+          <h2 className="font-bold text-base">Thinking Minds Techinical Training Institute, Sangamner</h2> <br /><br />
           <p>opposite Amrutvahini College, Sangamner,</p>
           <p>Ghulewadi</p>
           <p>Maharashtra 422608</p>

@@ -1,6 +1,6 @@
 const InstallmentInvoiceTemplate = ({ data }) => {
       return (
-    <div className="max-w-3xl mx-auto bg-white p-6 border text-sm">
+    <div className="max-w-3xl mx-auto bg-white text-black p-6 border text-sm">
       
       <h1 className="text-lg font-bold mb-2">FEE RECEIPT :</h1>
 

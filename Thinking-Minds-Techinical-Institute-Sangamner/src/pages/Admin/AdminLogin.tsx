@@ -38,6 +38,7 @@ function AdminLogin() {
       }
 
       const role = snap.data().role?.toLowerCase().trim();
+      console.log("Firestore Role:", role);
 
       if (!role) {
         alert("No role found");
@@ -48,7 +49,12 @@ function AdminLogin() {
       console.log("Logged in admin role:", role);
 
       // ✅ Save department for dashboard protection
-      localStorage.setItem("admin_department", role.toLowerCase());
+      localStorage.removeItem("admin_department");
+localStorage.setItem("admin_department", role.toLowerCase());
+      console.log(
+  "Saved Department:",
+  localStorage.getItem("admin_department")
+);
 
       // ✅ Redirect only ONCE
       navigate(`/admin/dashboard-${role}`);

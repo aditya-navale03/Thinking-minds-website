@@ -263,52 +263,99 @@ console.log("Course Options:", courseOptions);
     const finalRollNo =
       rollNo || generateRollNoValue(firstName, aadhar, lastName, department);
 
-    // 🔢 Generate Receipt Number
-    const dept =
-      department.toUpperCase().includes("IT") ? "IT" : "CIVIL";
-
-    const receiptNo = await generateReceiptNumber(dept);
 
     //the sample code for uploading to firebase section wise
 
+const mobileQuery = query(
+  collection(db, "studentProfiles"),
+  where("mobile", "==", mobile)
+);
 
-    const q = query(
-      collection(db, "students"),
-      where("email", "==", email.toLowerCase())
-    );
+const aadhaarQuery = query(
+  collection(db, "studentProfiles"),
+  where("aadhar", "==", aadhar.replace(/\D/g, ""))
+);
 
-    const existing = await getDocs(q);
+const [mobileSnap, aadhaarSnap] = await Promise.all([
+  getDocs(mobileQuery),
+  getDocs(aadhaarQuery),
+]);
 
-    if (!existing.empty) {
-      setLoading(false);
-      alert("Email already exists ❌");
-      return;
+let studentId = "";
+let receiptNo = "";
+
+console.log("Mobile matches:", mobileSnap.size);
+console.log("Aadhaar matches:", aadhaarSnap.size);
+if (!mobileSnap.empty || !aadhaarSnap.empty) {
+  const existingStudent =
+    !mobileSnap.empty
+      ? mobileSnap.docs[0]
+      : aadhaarSnap.docs[0];
+
+  studentId = existingStudent.id;
+
+  alert("Student already exists. Opening student profile.");
+
+  navigate(
+    `/admin/update-student/${department}/${studentId}`
+  );
+
+  setLoading(false);
+  return; // IMPORTANT
+} else {
+  const dept =
+    department.toUpperCase().includes("IT") ? "IT" : "CIVIL";
+
+  receiptNo = await generateReceiptNumber(dept);
+
+  const studentRef = await addDoc(
+    collection(db, "studentProfiles"),
+    {
+      fullName,
+      email,
+      mobile,
+      aadhar: aadhar.replace(/\D/g, ""),
+      dob,
+      rollNo: finalRollNo,
+      department,
+      receiptNo,
     }
+  );
+
+  studentId = studentRef.id;
+}
 
     // ✅ Save student as document
-    await addDoc(collection(db, "students"), {
-      rollNo: finalRollNo,
-      fullName,
-      dob,
-      email: email.toLowerCase(),
-      course: course.toUpperCase(),
-      department: department.toUpperCase(),
-      aadhar: aadhar.replace(/\D/g, ""),
-      mobile,
-      totalFee: feeValue,
-      firstInstallment: firstInstall,
-      remainingFee: Math.max(0, feeValue - firstInstall),
-      feePaid: firstInstall,
-      paymentMode,
-      receiptNo,
-      photoURL: ""
-    });
+    await addDoc(
+  collection(db, "enrollments"),
+  {
+    studentId,
+
+    courseName: course.toUpperCase(),
+
+    totalFee: feeValue,
+
+    firstInstallment: firstInstall,
+
+    feePaid: firstInstall,
+
+    remainingFee:
+      Math.max(0, feeValue - firstInstall),
+
+    paymentMode,
+
+    receiptNo,
+
+    department:
+      department.toUpperCase(),
+  }
+);
 
 
     // ❌ remove alert and navigate
     // ❌ remove page redirect
 
-
+  console.log("receipt No:", receiptNo);
     //invoice
     const invoicePayload = {
       studentName: fullName,
@@ -433,7 +480,7 @@ THINKING MINDS TECHNICAL TRAINING INSTITUTE
         <div className="mb-8">
 
           <h1 className="text-4xl font-bold text-white">
-            Add Student
+            New Registration
           </h1>
 
           <p className="text-slate-400 mt-2">

@@ -4,6 +4,18 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import ManageCourse from "./pages/Admin/ManageCourse";
+
+import AddCourseToStudent
+from "./pages/Admin/AddCourseToStudent";
+
+
+//new imports
+import Expenses from "./pages/Admin/Expenses";
+import StudentNotices from "./pages/Admin/StudentNotices";
+import CertificateRequests from "./pages/Admin/CertificateRequests";
+import EnquiryManagement from "./pages/Admin/EnquiryManagement";
+
 //new dashboard
 import AdminLayout from "./pages/Admin/AdminLayout";
 
@@ -50,7 +62,7 @@ import CertificateVerification from "./pages/Verification/CertificateVerificatio
 const queryClient = new QueryClient();
 
 //maintance mode on
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -112,6 +124,14 @@ const App = () => (
   {/* Civil */}
   <Route path="dashboard-civil" element={<CivilDashboard />} />
 
+  <Route
+  path="/admin/manage-course/:studentId/:enrollmentId"
+  element={<ManageCourse />}
+
+/>
+
+
+
   {/* IT */}
   <Route path="dashboard-it" element={<ITDashboard />} />
 
@@ -126,7 +146,31 @@ const App = () => (
 
   <Route path="reminders" element={<Reminders />} />
 
+  
+  {/* new routes for expenses,notices, certificate-request, enquires */}
+  <Route path="expenses" element={<Expenses />} />
+
+<Route path="notices" element={<StudentNotices />} />
+
+<Route
+  path="certificate-requests"
+  element={<CertificateRequests />}
+/>
+
+<Route
+  path="/admin/add-course/:dept/:studentId"
+  element={<AddCourseToStudent />}
+/>
+
+<Route
+  path="enquiries"
+  element={<EnquiryManagement />}
+/>
+
+
   <Route path="update-student/:dept/:id" element={<UpdateStudent />} />
+
+
 
 </Route>
           <Route path="*" element={<NotFound />} />
@@ -138,9 +182,12 @@ const App = () => (
           />
 
 
+
+
         </Routes>
 
     )}
+
 
 
 
