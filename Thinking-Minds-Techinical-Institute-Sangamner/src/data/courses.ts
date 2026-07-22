@@ -8,6 +8,7 @@ export interface Course {
   syllabus: string[];
   projects: string[];
   certifications: string[];
+  WhatsappNumber: string;
   careerOpportunities: string[];
 }
 
@@ -16,6 +17,7 @@ export const courses: Course[] = [
     id: "java-fullstack",
     name: "Java Full Stack",
     category: "IT",
+    WhatsappNumber:"9552495373",
     duration: "6 Months",
    // fees: "₹45,000",
     description: "Master full-stack Java development with Spring Boot, Hibernate, and modern frontend frameworks.",
@@ -48,6 +50,7 @@ export const courses: Course[] = [
     id: "python",
     name: "Python Programming",
     category: "IT",
+    WhatsappNumber:"9552495373",
     duration: "4 Months",
    // fees: "₹35,000",
     description: "Learn Python from basics to advanced including Django, Flask, and data science libraries.",
@@ -80,6 +83,7 @@ export const courses: Course[] = [
     id: "web-development",
     name: "Web Development",
     category: "IT",
+    WhatsappNumber:"9552495373",
     duration: "5 Months",
    // fees: "₹40,000",
     description: "Complete web development training covering HTML, CSS, JavaScript, React, and Node.js.",
@@ -112,6 +116,7 @@ export const courses: Course[] = [
     id: "sql-dbms",
     name: "SQL & DBMS",
     category: "IT",
+    WhatsappNumber:"9552495373",
     duration: "3 Months",
    // fees: "₹25,000",
     description: "Comprehensive database management training with SQL, MySQL, and database design.",
@@ -144,6 +149,7 @@ export const courses: Course[] = [
     id: "computer-basics",
     name: "Computer Basics",
     category: "IT",
+    WhatsappNumber:"9552495373",
     duration: "2 Months",
    // fees: "₹15,000",
     description: "Foundational computer skills including MS Office, internet, and digital literacy.",
@@ -176,6 +182,7 @@ export const courses: Course[] = [
     id: "ai-ml",
     name: "AI & Machine Learning",
     category: "IT",
+    WhatsappNumber:"9552495373",
     duration: "6 Months",
    // fees: "₹55,000",
     description: "Advanced course covering artificial intelligence, machine learning, and deep learning.",
@@ -208,6 +215,7 @@ export const courses: Course[] = [
     id: "autocad",
     name: "AutoCAD 2D/3D",
     category: "Civil",
+    WhatsappNumber:"8412978749",
     duration: "4 Months",
     //fees: "₹30,000",
     description: "Complete AutoCAD training for 2D drafting and 3D modeling in civil engineering.",
@@ -240,6 +248,7 @@ export const courses: Course[] = [
     id: "staad-pro",
     name: "STAAD Pro",
     category: "Civil",
+    WhatsappNumber:"8412978749",
     duration: "3 Months",
    // fees: "₹35,000",
     description: "Structural analysis and design software training for civil engineers.",
@@ -272,6 +281,7 @@ export const courses: Course[] = [
     id: "revit",
     name: "Revit Architecture",
     category: "Civil",
+    WhatsappNumber:"8412978749",
     duration: "4 Months",
    // fees: "₹40,000",
     description: "BIM software training for architectural design and building information modeling.",
@@ -304,6 +314,7 @@ export const courses: Course[] = [
     id: "sketchup",
     name: "SketchUp",
     category: "Civil",
+    WhatsappNumber:"8412978749",
     duration: "2 Months",
     //fees: "₹20,000",
     description: "3D modeling software for architectural and interior design visualization.",
@@ -336,6 +347,7 @@ export const courses: Course[] = [
     id: "3ds-max",
     name: "3ds Max",
     category: "Civil",
+    WhatsappNumber:"8412978749",
     duration: "5 Months",
   //  fees: "₹45,000",
     description: "Professional 3D modeling, animation, and rendering for architectural visualization.",
@@ -368,6 +380,7 @@ export const courses: Course[] = [
     id: "civil-3d",
     name: "Civil 3D",
     category: "Civil",
+    WhatsappNumber:"8412978749",
     duration: "4 Months",
    // fees: "₹38,000",
     description: "Civil engineering design software for infrastructure and site development projects.",
@@ -401,6 +414,7 @@ export const courses: Course[] = [
   id: "autocad-2d",
   name: "AutoCAD 2D",
   category: "Civil",
+  WhatsappNumber:"8412978749",
   duration: "2 Months",
  //fees: "₹18,000",
   description: "Focused training on 2D drafting using AutoCAD for civil and architectural drawings.",
@@ -437,6 +451,7 @@ export const courses: Course[] = [
   id: "ms-excel",
   name: "MS Excel",
   category: "Civil",
+  WhatsappNumber:"8412978749",
   duration: "2 Months",
  // fees: "₹12,000",
   description: "Comprehensive Microsoft Excel training from basics to advanced data analysis.",
@@ -472,6 +487,7 @@ export const courses: Course[] = [
   id: "estimation-costing-excel",
   name: "Estimation & Costing (Excel)",
   category: "Civil",
+  WhatsappNumber:"8412978749",
   duration: "3 Months",
  // fees: "₹22,000",
   description: "Learn civil project estimation, BOQ preparation, and costing using Microsoft Excel.",
@@ -509,6 +525,7 @@ export const courses: Course[] = [
   id: "etabs",
   name: "ETABS",
   category: "Civil",
+  WhatsappNumber:"8412978749",
   duration: "2 Months",
   description: "Structural analysis and design training using ETABS software.",
   syllabus: [
@@ -542,6 +559,7 @@ export const courses: Course[] = [
   id: "internship-2-months",
   name: "Internship (2 Months)",
   category: "Civil",
+  WhatsappNumber:"8412978749",
   duration: "2 Months",
   description: "Practical industry internship with real project exposure.",
   syllabus: [
@@ -570,6 +588,7 @@ export const courses: Course[] = [
   id: "internship-3-months",
   name: "Internship (3 Months)",
   category: "Civil",
+  WhatsappNumber:"8412978749",
   duration: "3 Months",
   description: "Extended industry internship with advanced project involvement.",
   syllabus: [
@@ -598,6 +617,7 @@ export const courses: Course[] = [
   id: "msp",
   name: "Microsoft Project (MSP)",
   category: "Civil",
+  WhatsappNumber:"8412978749",
   duration: "2 Months",
   description: "Learn project planning, scheduling, and resource management using Microsoft Project.",
   syllabus: [
@@ -628,6 +648,7 @@ export const courses: Course[] = [
   id: "interview-preparation",
   name: "Interview Preparation",
   category: "Civil",
+  WhatsappNumber:"8412978749",
   duration: "ALL",
   description: "Prepare for technical and HR interviews with mock sessions and aptitude training.",
   syllabus: [
