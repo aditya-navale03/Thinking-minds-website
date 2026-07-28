@@ -7,7 +7,7 @@ import CourseModal from "./courseModal";   // <-- make sure this exists
 import { Course, courses } from "../data/courses";
 
 const CoursesSection = () => {
-  const [activeTab, setActiveTab] = useState("it");
+  const [activeTab, setActiveTab] = useState("civil");
 
   // NEW POPUP MODAL STATES
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
